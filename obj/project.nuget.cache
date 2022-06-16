@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "gCFYAGVlMNy4qf37Bi/1RSF2octTOpwSXMuwFrr7EAQXom0vHZTDsYMk9MQrGCsUD9PoJpYHwR1mROE9VMbe8g==",
+  "success": true,
+  "projectFilePath": "E:\\ISAD Official\\IAMS New\\IAMS\\IAMS\\IAMS.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.22\\microsoft.netcore.app.host.win-x64.3.1.22.nupkg.sha512"
+  ],
+  "logs": []
+}
