@@ -2,9 +2,227 @@
     ViewData["Title"] = "Team Members";
     Layout = "_Layout";
 }
+<style type="text/css">
+    .editRole {
+        display: inline-block;
+        cursor: pointer;
+    }
 
+    .selectRole {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebar_policy').hide();
+        $('#listofEmployeesContainer').hide();
+        $("#searchTableRecord").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#listOfEmployee tbody tr").filter(function () {
 
-<div class="row text-center" style="margin-top:50px;">
-   <p>Team Members</p>
+                $(this).toggle($(this).find("td.searchable").text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#searchTeamFormation").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#listOfEmployeeTeam tbody tr").filter(function () {
+
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $('.editRole').click(function () {
+            $(this).hide();
+            $(this).parent().find('.selectRole').show();
+        });
+        $('.selectRole').on('change', function () {
+            $(this).parent().parent().find('.userTypeField').text($(this).find('option:selected').text());
+            $(this).hide();
+            $(this).parent().find('.editRole').show();
+
+        });
+
+    });
+
+    function ShowEmployeeContainer() {
+        console.log($('#deptSelectionBox option:selected').val());
+        if ($('#deptSelectionBox option:selected').val() == 0)
+            $('#listofEmployeesContainer').hide();
+        else
+            $('#listofEmployeesContainer').show();
+    }
+    function addNewTeam() {
+        $('#setupAuditTeam').modal('show');
+    }
+</script>
+<div class="row mt-3">
+    <h5>Select Department</h5>
+    <select id="deptSelectionBox" onchange="ShowEmployeeContainer();" class="form-select form-control" aria-label="Default select example">
+        <option value="0" selected>Select Your Department</option>
+        <option value="isad">Information Systems Audit Department</option>
+        <option value="cad">Corporate Audit Department</option>
+        <option value="fad">Field Audit Department</option>
+        <option value="i&c">Inspection & Complaints Department</option>
+        <option value="sa">Shariah Audit</option>
+    </select>
+</div>
+<div id="listofEmployeesContainer" class="row mt-3 hide">
+    <h5>List of Employee</h5><br />
+    <input class="form-control" id="searchTableRecord" type="text" placeholder="Search..">
+    <br />
+    <table id="listOfEmployee" class="table align-middle mb-0 mt-2 bg-white table-hover table-striped">
+        <thead class="bg-light">
+            <tr>
+                <th class="col-md-1">Sr No.</th>
+                <th class="col-md-2">PP No</th>
+                <th class="col-md-3">Name</th>
+                <th class="col-md-3">User Type</th>
+                <th class="col-md-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">1</p>
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">125525</p>
+                    <!--<p class="text-muted mb-0">IT department</p>-->
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">Ali Asif</p>
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1 userTypeField">Auditor</p>
+                </td>
+                <td>
+                    <small class="text-danger editRole">Edit</small>
+                    <select class="selectRole"><option>Auditor</option><option>Implementation Officer</option><option>Planning & Development</option></select>
+                </td>
+            </tr>
+            <tr>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">2</p>
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">128527</p>
+                    <!--<p class="text-muted mb-0">IT department</p>-->
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">Muhammad Aqib</p>
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1 userTypeField">Auditor</p>
+                </td>
+                <td>
+                    <small class="text-danger editRole">Edit</small>
+                    <select class="selectRole"><option>Auditor</option><option>Implementation Officer</option><option>Planning & Development</option></select>
+                </td>
+            </tr>
+            <tr>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">3</p>
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">125022</p>
+                    <!--<p class="text-muted mb-0">IT department</p>-->
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">Asfand Yar Javaid</p>
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1 userTypeField">Auditor</p>
+                </td>
+                <td>
+                    <small class="text-danger editRole">Edit</small>
+                    <select class="selectRole"><option>Auditor</option><option>Implementation Officer</option><option>Planning & Development</option></select>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <hr class="w-100" />
+    <div class="row mt-2 w-100">
+        <div class="col-md-6">
+            <h5>Team Formation</h5>
+        </div>
+        <div class="col-md-6">
+            <button onclick="addNewTeam();" class="btn-danger" style="float:right;">Add New</button>
+        </div>
+    </div>
+    <table id="listOfEmployeeTeam" class="table align-middle mb-0 mt-2 bg-white table-hover table-striped">
+        <thead class="bg-light">
+            <tr>
+                <th class="col-md-1">Sr No.</th>
+                <th class="col-md-3">Team Name</th>
+                <th class="col-md-7">Team Members</th>
+                <th class="col-md-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">1</p>
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">Team A</p>
+                    <!--<p class="text-muted mb-0">IT department</p>-->
+                </td>
+                <td class="searchable">
+                    <p class="fw-normal mb-1">Ali Asif (L), Muhammad Aqib (M)</p>
+                </td>
+                <td>
+                    <small class="text-danger deleteTeam">Delete</small>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
 
 </div>
+
+<div id="setupAuditTeam" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">New Audit Team</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="branchCodeModalField">Team Name</label>
+                        <input type="text" class="form-control" id="teamNameModalField" aria-describedby="brcode" placeholder="Team Name">
+
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-md-3">Participant</label>
+                        <label for="branchNameModalField">Auditors</label>
+                        <label for="branchNameModalField">Auditors</label>
+                        <div class="row" style="padding-left:20px;">
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                            <div class="col-md-6"><label>Ali Asif</label></div>
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                            <div class="col-md-6"><label>Muhammad Aqib</label></div>
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                            <div class="col-md-6"><label>Asfand Yar Javaid</label></div>
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                            <div class="col-md-6"><label>Arshad Javed</label></div>
+                            <div class="col-md-3"><input type="checkbox" /></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="publishNewTeamChanges();" type="button" class="btn btn-danger">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -22,7 +22,23 @@ namespace IAMS.Controllers
         {
             return View();
         }
-       
+        [HttpPost]
+        public ActionResult DoLogin(LoginModel login)
+        {
+            string ppno = login.PPNumber;
+            string password = login.Password;
+            DBConnection dBConnection = new DBConnection();
+            var user=dBConnection.AutheticateLogin(login); 
+            if(user.ID != 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }else
+            {
+                TempData["Message"] = String.Format("Incorrect UserName or Password");
+                return RedirectToAction("Index", "Login");
+            }
+            
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

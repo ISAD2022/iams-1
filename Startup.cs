@@ -13,6 +13,7 @@ namespace IAMS
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -52,6 +53,8 @@ namespace IAMS
                     name: "default",
                     pattern: "{controller=Login}/{action=Index}/{id?}");
             });
+            
         }
+
     }
 }
