@@ -14,6 +14,7 @@ namespace IAMS.Controllers
     public class LoginController : Controller
     {
         private readonly ILogger<LoginController> _logger;
+        private readonly DBConnection dBConnection = new DBConnection();
 
         public LoginController(ILogger<LoginController> logger)
         {
@@ -29,7 +30,6 @@ namespace IAMS.Controllers
         {
             string ppno = login.PPNumber;
             string password = login.Password;
-            DBConnection dBConnection = new DBConnection();
             var user=dBConnection.AutheticateLogin(login); 
             if(user.ID != 0)
             {

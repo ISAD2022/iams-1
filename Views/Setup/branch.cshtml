@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "BranchSetup";
     Layout = "_Layout";
-
 }
 <script type="text/javascript">
     $(document).ready(function () {
@@ -57,13 +56,19 @@
             <tr>
                 <th>Branch Code</th>
                 <th>Branch Name</th>
-                <th>Zone Name</th>
+                <th>Zone ID</th>
                 <th>Address</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+            @{
+            if (ViewData["BranchList"] != null)
+            {
+            foreach (var item in (dynamic)(ViewData["BranchList"]))
+            {
+
             <tr>
                 <td>
                     <p class="fw-normal mb-1">24402</p>
@@ -78,19 +83,6 @@
                 <td>
                     <p class="fw-normal mb-1">1 Faisal Avenue G-7/1, Zero Point, Islamabad</p>
                 </td>
-                <!--<td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                             alt=""
-                             style="width: 45px; height: 45px"
-                             class="rounded-circle" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">John Doe</p>
-                            <p class="text-muted mb-0">john.doe@gmail.com</p>
-                        </div>
-                    </div>
-                </td>-->
-
                 <td>
                     <span class="badge badge-success rounded-pill d-inline">Active</span>
                 </td>
@@ -100,78 +92,56 @@
                     </button>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <p class="fw-normal mb-1">24401</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Islamabad Branch</p>
-                    <!--<p class="text-muted mb-0">IT department</p>-->
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Islamabad</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Zero Point, Islamabad</p>
-                </td>
-                <!--<td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                             alt=""
-                             style="width: 45px; height: 45px"
-                             class="rounded-circle" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">John Doe</p>
-                            <p class="text-muted mb-0">john.doe@gmail.com</p>
-                        </div>
-                    </div>
-                </td>-->
+            }}}
+            <!-- <tr>
+             <td>
+                 <p class="fw-normal mb-1">24401</p>
+             </td>
+             <td>
+                 <p class="fw-normal mb-1">Islamabad Branch</p>
+            </td>
+        <td>
+            <p class="fw-normal mb-1">Islamabad</p>
+        </td>
+        <td>
+            <p class="fw-normal mb-1">Zero Point, Islamabad</p>
+        </td>
 
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24401','Islamabad Branch','Islamabad','Zero Point, Islamabad','Active');">
-                        Edit
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="fw-normal mb-1">24403</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Rawalpind Cantt Branch</p>
-                    <!--<p class="text-muted mb-0">IT department</p>-->
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Rawalpindi</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Old Airport1 Road, Rawalpindi</p>
-                </td>
-                <!--<td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                             alt=""
-                             style="width: 45px; height: 45px"
-                             class="rounded-circle" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">John Doe</p>
-                            <p class="text-muted mb-0">john.doe@gmail.com</p>
-                        </div>
-                    </div>
-                </td>-->
+        <td>
+            <span class="badge badge-success rounded-pill d-inline">Active</span>
+        </td>
+        <td>
+            <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24401','Islamabad Branch','Islamabad','Zero Point, Islamabad','Active');">
+                Edit
+            </button>
+        </td>
+        </tr>
+        <tr>
+            <td>
+                <p class="fw-normal mb-1">24403</p>
+            </td>
+            <td>
+                <p class="fw-normal mb-1">Rawalpind Cantt Branch</p>
+               
+            </td>
+            <td>
+                <p class="fw-normal mb-1">Rawalpindi</p>
+            </td>
+            <td>
+                <p class="fw-normal mb-1">Old Airport1 Road, Rawalpindi</p>
+            </td>
+           
 
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24403','Rawalpind Cantt Branch','Rawalpindi','Old Airport1 Road, Rawalpindi','Active');">
-                        Edit
-                    </button>
-                </td>
-            </tr>
+            <td>
+                <span class="badge badge-success rounded-pill d-inline">Active</span>
+            </td>
+            <td>
+                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24403','Rawalpind Cantt Branch','Rawalpindi','Old Airport1 Road, Rawalpindi','Active');">
+                    Edit
+                </button>
+            </td>
+        </tr>
+        -->
         </tbody>
     </table>
 </div>

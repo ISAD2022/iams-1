@@ -14,6 +14,7 @@ namespace IAMS.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly TopMenus tm = new TopMenus();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -22,7 +23,6 @@ namespace IAMS.Controllers
 
         public IActionResult Index()
         {
-            TopMenus tm = new TopMenus();
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
@@ -30,7 +30,6 @@ namespace IAMS.Controllers
 
         public IActionResult Privacy()
         {
-            TopMenus tm = new TopMenus();
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();

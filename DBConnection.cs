@@ -65,7 +65,7 @@ namespace IAMS
             List<MenuModel> modelList = new List<MenuModel>();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "Select * FROM iamsdev.T_MENU m WHERE m.isactive='Y'";
+                cmd.CommandText = "Select * FROM iamsdev.T_MENU m WHERE m.isactive='Y' order by m.MENU_ORDER asc";
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -87,7 +87,7 @@ namespace IAMS
             List<MenuPagesModel> modelList = new List<MenuPagesModel>();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "Select * FROM iamsdev.T_MENU_PAGES mp WHERE mp.Status='A'";
+                cmd.CommandText = "Select * FROM iamsdev.T_MENU_PAGES mp WHERE mp.Status='A' order by mp.PAGE_ORDER asc";
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -103,6 +103,34 @@ namespace IAMS
             }
             con.Close();
             return modelList;
+        }
+        public List<BranchModel> GetBranches()
+        {
+            var con = this.DatabaseConnection();
+            List<BranchModel> branchList = new List<BranchModel>();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "Select * FROM iamsdev.T_BRANCHES b WHERE b.Status='A' order by b.BR_NAME asc";
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    BranchModel br = new BranchModel();
+                    br.ID = Convert.ToInt32(rdr["ID"]);
+                    br.ZONE_ID = Convert.ToInt32(rdr["ID"]);
+                    br.AZ_ID = Convert.ToInt32(rdr["ID"]);
+                    br.CAD_ID = Convert.ToInt32(rdr["ID"]);
+                    br.BR_NAME = rdr["BR_NAME"].ToString();
+                    br.BR_CODE = rdr["BR_CODE"].ToString();
+                    br.ADDRESS = rdr["ADDRESS"].ToString();
+                    br.STATUS = rdr["STATUS"].ToString();
+                    br.REFERENCE_CIRCULAR = rdr["REFERENCE_CIRCULAR"].ToString();
+                    br.CREATED_ON = Convert.ToDateTime(rdr["CREATED_ON"]);
+                    br.CLOSED_ON = Convert.ToDateTime(rdr["CLOSED_ON"]);
+                    branchList.Add(br);
+                }
+            }
+            con.Close();
+            return branchList;
         }
 
     }
