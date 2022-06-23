@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace IAMS.Controllers
 {
@@ -20,11 +22,17 @@ namespace IAMS.Controllers
 
         public IActionResult Index()
         {
+            TopMenus tm = new TopMenus();
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
 
         public IActionResult Privacy()
         {
+            TopMenus tm = new TopMenus();
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
 
