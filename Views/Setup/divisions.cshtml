@@ -1,7 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "BranchSetup";
+    ViewData["Title"] = "Divisions";
     Layout = "_Layout";
 }
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#sidebar_policy').hide();
@@ -35,7 +36,7 @@
     }
 
     function publishBranchChanges() {
-        
+
         //$('#listOfBranches tbody').append('<tr><td></td>');
     }
 </script>
@@ -47,101 +48,98 @@
             <input class="form-control" id="searchTableRecord" type="text" placeholder="Search..">
         </div>
         <div class="col-md-2">
-            <button onclick="newBranchSetup();" class="btn btn-danger w-100">Add New</button>     
-        </div>       
+            <button onclick="newBranchSetup();" class="btn btn-danger w-100">Add New</button>
+        </div>
     </div>
     <br>
     <table id="listOfBranches" class="table align-middle mb-0 bg-white table-hover table-striped">
         <thead class="bg-light">
             <tr>
-                <th>Branch Code</th>
-                <th>Branch Name</th>
-                <th>Zone ID</th>
-                <th>Address</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @{
-            if (ViewData["BranchList"] != null)
-            {
-            foreach (var item in (dynamic)(ViewData["BranchList"]))
-            {
+                if (ViewData["DivisionList"] != null)
+                {
+                    foreach (var item in (dynamic)(ViewData["DivisionList"]))
+                    {
 
-            <tr>
-                <td>
-                    <p class="fw-normal mb-1">24402</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Head Office Branch</p>
-                    <!--<p class="text-muted mb-0">IT department</p>-->
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Islamabad</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">1 Faisal Avenue G-7/1, Zero Point, Islamabad</p>
-                </td>
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24402','Head Office Branch','Islamabad','1 Faisal Avenue G-7/1, Zero Point, Islamabad','Active');">
-                        Edit
-                    </button>
-                </td>
-            </tr>
-            }}}
+                        <tr>
+                            <td>
+                                <p class="fw-normal mb-1">@item.CODE</p>
+                            </td>
+                            <td>
+                                <p class="fw-normal mb-1">@item.NAME</p>
+                                <!--<p class="text-muted mb-0">IT department</p>-->
+                            </td>
+                            <td>
+                                <p class="fw-normal mb-1">@item.DESCRIPTION</p>
+                            </td>
+                            <td>
+                                <span class="badge badge-success rounded-pill d-inline">@item.STATUS</span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24402','Head Office Branch','Islamabad','1 Faisal Avenue G-7/1, Zero Point, Islamabad','Active');">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }}
             <!-- <tr>
-             <td>
-                 <p class="fw-normal mb-1">24401</p>
-             </td>
-             <td>
-                 <p class="fw-normal mb-1">Islamabad Branch</p>
-            </td>
-        <td>
-            <p class="fw-normal mb-1">Islamabad</p>
-        </td>
-        <td>
-            <p class="fw-normal mb-1">Zero Point, Islamabad</p>
-        </td>
-
-        <td>
-            <span class="badge badge-success rounded-pill d-inline">Active</span>
-        </td>
-        <td>
-            <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24401','Islamabad Branch','Islamabad','Zero Point, Islamabad','Active');">
-                Edit
-            </button>
-        </td>
-        </tr>
-        <tr>
+                 <td>
+                     <p class="fw-normal mb-1">24401</p>
+                 </td>
+                 <td>
+                     <p class="fw-normal mb-1">Islamabad Branch</p>
+                </td>
             <td>
-                <p class="fw-normal mb-1">24403</p>
+                <p class="fw-normal mb-1">Islamabad</p>
             </td>
             <td>
-                <p class="fw-normal mb-1">Rawalpind Cantt Branch</p>
-               
+                <p class="fw-normal mb-1">Zero Point, Islamabad</p>
             </td>
-            <td>
-                <p class="fw-normal mb-1">Rawalpindi</p>
-            </td>
-            <td>
-                <p class="fw-normal mb-1">Old Airport1 Road, Rawalpindi</p>
-            </td>
-           
 
             <td>
                 <span class="badge badge-success rounded-pill d-inline">Active</span>
             </td>
             <td>
-                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24403','Rawalpind Cantt Branch','Rawalpindi','Old Airport1 Road, Rawalpindi','Active');">
+                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24401','Islamabad Branch','Islamabad','Zero Point, Islamabad','Active');">
                     Edit
                 </button>
             </td>
-        </tr>
-        -->
+            </tr>
+            <tr>
+                <td>
+                    <p class="fw-normal mb-1">24403</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">Rawalpind Cantt Branch</p>
+
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">Rawalpindi</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">Old Airport1 Road, Rawalpindi</p>
+                </td>
+
+
+                <td>
+                    <span class="badge badge-success rounded-pill d-inline">Active</span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24403','Rawalpind Cantt Branch','Rawalpindi','Old Airport1 Road, Rawalpindi','Active');">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+            -->
         </tbody>
     </table>
 </div>
@@ -204,3 +202,4 @@
         </div>
     </div>
 </div>
+

@@ -132,6 +132,28 @@ namespace IAMS
             con.Close();
             return branchList;
         }
-
+        public List<DivisionModel> GetDivisions()
+        {
+            var con = this.DatabaseConnection();
+            List<DivisionModel> divList = new List<DivisionModel>();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "Select * FROM iamsdev.T_DIVISIONS d WHERE d.Status='A' order by d.NAME asc";
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    DivisionModel div = new DivisionModel();
+                    div.ID = Convert.ToInt32(rdr["ID"]);
+                    div.NAME = rdr["NAME"].ToString();
+                    div.CODE = rdr["CODE"].ToString();
+                    div.DESCRIPTION = rdr["DESCRIPTION"].ToString();
+                    div.STATUS = rdr["STATUS"].ToString();
+                    div.REFERENCE_CIRCULAR = rdr["REFERENCE_CIRCULAR"].ToString();
+                    divList.Add(div);
+                }
+            }
+            con.Close();
+            return divList;
+        }
     }
 }

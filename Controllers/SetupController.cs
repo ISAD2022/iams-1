@@ -20,15 +20,23 @@ namespace IAMS.Controllers
             _logger = logger;
         }
 
-        public IActionResult branch()
+        public IActionResult branches()
         {
             
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            ViewData["Branch"] = dBConnection.GetBranches();
+            ViewData["BranchList"] = dBConnection.GetBranches();
             return View();
         }
-        public IActionResult audit_zone()
+        public IActionResult divisions()
+        {
+
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["DivisionList"] = dBConnection.GetDivisions();
+            return View();
+        }
+        public IActionResult audit_zones()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 

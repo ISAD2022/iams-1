@@ -77,8 +77,6 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\RiskAsse
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\RiskAssessment\submission_for_review.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\RiskAssessment\team_members.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\RiskAssessment\tentative_audit_plan.cshtml.g.cs
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\audit_zone.cshtml.g.cs
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\branch.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_BlankLayout.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
@@ -92,3 +90,7 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.csproj.CopyComp
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.pdb
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.genruntimeconfig.cache
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\audit_zones.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\branches.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\departments.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\divisions.cshtml.g.cs
