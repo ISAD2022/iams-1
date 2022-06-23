@@ -40,23 +40,26 @@
                         {
                             foreach (var item in (dynamic)(ViewData["TopMenu"]))
                             {
-                            <li class="nav-item active dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    @item.Menu_Name
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="">
-                                    @{
-                                        foreach (var itemPage in (dynamic)(ViewData["TopMenuPages"]))
-                                        {
-                                            if (itemPage.Menu_Id == item.Menu_Id)
-                                            {<a class="dropdown-item" href="~/@itemPage.Page_Path">@itemPage.Page_Name</a>}
+                    <li class="nav-item active dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @item.Menu_Name
+                        </a>
+                        @if (ViewData["TopMenuPages"] != null)
+                        {
+                            <div class="dropdown-menu" aria-labelledby="">
+                                @{
+                                    foreach (var itemPage in (dynamic)(ViewData["TopMenuPages"]))
+                                    {
+                                        if (itemPage.Menu_Id == item.Menu_Id)
+                                        {<a class="dropdown-item" href="~/@itemPage.Page_Path">@itemPage.Page_Name</a>}
 
-                                        }
                                     }
-                                </div>
-                            </li>
+                                }
+                            </div>
+                         }
+                        </li>
 
-                                                }
+                            }
                          }
                      }
                     <!--

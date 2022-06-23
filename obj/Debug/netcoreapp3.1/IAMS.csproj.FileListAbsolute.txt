@@ -92,3 +92,5 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\unix\lib\ne
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\System.Windows.Extensions.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\audit_zone_setup.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\branch_setup.cshtml.g.cs
