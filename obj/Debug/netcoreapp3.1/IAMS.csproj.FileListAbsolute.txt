@@ -94,3 +94,4 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\au
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\branches.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\departments.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\divisions.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.csproj.AssemblyReference.cache

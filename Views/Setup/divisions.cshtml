@@ -5,54 +5,69 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        var g_divId = 0;
         $('#sidebar_policy').hide();
         $("#searchTableRecord").on("keyup", function () {
             var value = $(this).val().toLowerCase();
-            $("#listOfBranches tbody tr").filter(function () {
+            $("#listOfDivision tbody tr").filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
     });
 
-    function newBranchSetup() {
-        $('#setupBranchModal').modal('show');
-        $('#branchCodeModalField').val('');
-        $('#branchNameModalField').val('');
-        $('#branchZoneModalField').val('');
-        $('#branchAddressModalField').val('');
+    function newDivSetup() {
+        g_divId = 0;
+        $('#setupDivModal').modal('show');
+        $('#divCodeModalField').val('');
+        $('#divNameModalField').val('');
+        $('#divAddressModalField').val('');
     }
 
-    function setupBranch(code, name, zone, address, status) {
-        $('#branchCodeModalField').val(code);
-        $('#branchNameModalField').val(name);
-        $('#branchZoneModalField').val(zone);
-        $('#branchAddressModalField').val(address);
+    function setupDivision(code, name, desc, status, id) {
+        g_divId = id;
+        console.log(code, name, desc, status,id);
+        $('#divCodeModalField').val(code);
+        $('#divNameModalField').val(name);
+        $('#divAddressModalField').val(desc);
         if (status == "Active")
-            $('#branchActiveModalField').click();
+            $('#divActiveModalField').click();
         else if (status == "Inactive")
-            $('#branchInactiveModalField').click();
+            $('#divInactiveModalField').click();
 
-        $('#setupBranchModal').modal('show');
+        $('#setupDivModal').modal('show');
     }
 
-    function publishBranchChanges() {
-
-        //$('#listOfBranches tbody').append('<tr><td></td>');
+    function publishDivisionChanges() {
+               
+        var code=$('#divCodeModalField').val();
+        var name= $('#divNameModalField').val();
+        var desc = $('#divAddressModalField').val();
+        var status;
+        if ($('#divActiveModalField').is(':checked'))
+            status = 'Active';
+        else
+            status = 'InActive';
+        if (g_divId == 0)
+            var row = "<tr id=\"div_" + g_divId + "\"><td class=\"div_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"div_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"div_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"div_status\"><span class=\"badge badge-success rounded-pill d-inline\">Active</span></td><td class=\"div_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDivision(" + code + "," + name + "," + desc + "," + status + "," + g_divId + ");\">Edit</button></td></tr>";
+        else
+            $('#div_' + g_divId).html("<td class=\"div_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"div_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"div_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"div_status\"><span class=\"badge badge-success rounded-pill d-inline\">Active</span></td><td class=\"div_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDivision(" + code + "," + name + "," + desc + "," + status + "," + g_divId + ");\">Edit</button></td>");
+        $('#listOfDivision tbody').append(row);
+        $('#setupDivModal').modal('hide');
     }
 </script>
 
 <div class="col-md-12" style="margin-top:20px;">
-    <h3>List of Branches</h3>
+    <h3>List of Divisions</h3>
     <div class="row">
         <div class="col-md-10">
             <input class="form-control" id="searchTableRecord" type="text" placeholder="Search..">
         </div>
         <div class="col-md-2">
-            <button onclick="newBranchSetup();" class="btn btn-danger w-100">Add New</button>
+            <button onclick="newDivSetup();" class="btn btn-danger w-100">Add New Division</button>
         </div>
     </div>
     <br>
-    <table id="listOfBranches" class="table align-middle mb-0 bg-white table-hover table-striped">
+    <table id="listOfDivision" class="table align-middle mb-0 bg-white table-hover table-striped">
         <thead class="bg-light">
             <tr>
                 <th>Code</th>
@@ -69,86 +84,37 @@
                     foreach (var item in (dynamic)(ViewData["DivisionList"]))
                     {
 
-                        <tr>
-                            <td>
+                        <tr id="div_@item.ID">
+                            <td class="div_code">
                                 <p class="fw-normal mb-1">@item.CODE</p>
                             </td>
-                            <td>
+                            <td class="div_name">
                                 <p class="fw-normal mb-1">@item.NAME</p>
                                 <!--<p class="text-muted mb-0">IT department</p>-->
                             </td>
-                            <td>
+                            <td class="div_desc">
                                 <p class="fw-normal mb-1">@item.DESCRIPTION</p>
                             </td>
-                            <td>
+                            <td class="div_status">
                                 <span class="badge badge-success rounded-pill d-inline">@item.STATUS</span>
                             </td>
-                            <td>
-                                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24402','Head Office Branch','Islamabad','1 Faisal Avenue G-7/1, Zero Point, Islamabad','Active');">
+                            <td class="div_action">
+                                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupDivision('@item.CODE','@item.NAME','@item.DESCRIPTION','@item.STATUS','@item.ID');">
                                     Edit
                                 </button>
                             </td>
                         </tr>
                     }
                 }}
-            <!-- <tr>
-                 <td>
-                     <p class="fw-normal mb-1">24401</p>
-                 </td>
-                 <td>
-                     <p class="fw-normal mb-1">Islamabad Branch</p>
-                </td>
-            <td>
-                <p class="fw-normal mb-1">Islamabad</p>
-            </td>
-            <td>
-                <p class="fw-normal mb-1">Zero Point, Islamabad</p>
-            </td>
-
-            <td>
-                <span class="badge badge-success rounded-pill d-inline">Active</span>
-            </td>
-            <td>
-                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24401','Islamabad Branch','Islamabad','Zero Point, Islamabad','Active');">
-                    Edit
-                </button>
-            </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="fw-normal mb-1">24403</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Rawalpind Cantt Branch</p>
-
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Rawalpindi</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Old Airport1 Road, Rawalpindi</p>
-                </td>
-
-
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24403','Rawalpind Cantt Branch','Rawalpindi','Old Airport1 Road, Rawalpindi','Active');">
-                        Edit
-                    </button>
-                </td>
-            </tr>
-            -->
         </tbody>
     </table>
 </div>
 
-<div id="setupBranchModal" class="modal" tabindex="-1" role="dialog">
+<div id="setupDivModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Branch Setup</h5>
+                <h5 class="modal-title">Division Setup</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -156,38 +122,29 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="branchCodeModalField">Branch Code</label>
-                        <input type="text" class="form-control" id="branchCodeModalField" aria-describedby="brcode" placeholder="Branch Code">
+                        <label for="branchCodeModalField">Code</label>
+                        <input type="text" class="form-control" id="divCodeModalField" aria-describedby="brcode" placeholder="Division Code">
 
                     </div>
                     <div class="form-group">
-                        <label for="branchNameModalField">Branch Name</label>
-                        <input type="text" class="form-control" id="branchNameModalField" placeholder="Branch Name">
-                    </div>
-                    <div class="form-group">
-                        <label for="branchZoneModalField">Zone</label>
-                        <select id="branchZoneModalField" class="form-control">
-                            <option id="Rawalpindi" name="Rawalpindi">Rawalpindi</option>
-                            <option id="Lahore" name="Lahore">Lahore</option>
-                            <option id="Islamabad" name="Islamabad">Islamabad</option>
-                            <option id="Karachi" name="Karachi">Karachi</option>
-                        </select>
+                        <label for="branchNameModalField">Name</label>
+                        <input type="text" class="form-control" id="divNameModalField" placeholder="Division Name">
                     </div>
                     <div class="form-group">
                         <label for="branchAddressModalField">Address</label>
-                        <textarea rows="3" class="form-control" id="branchAddressModalField" placeholder="Branch Address" draggable="false"></textarea>
+                        <textarea rows="3" class="form-control" id="divAddressModalField" placeholder="Division Address" draggable="false"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="branchAddressModalField">Status</label>
                         <div class="row col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="branchActiveModalField" value="option1" />
-                                <label class="form-check-label" for="branchActiveModalField">Active</label>
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="divActiveModalField" value="option1" />
+                                <label class="form-check-label" for="divActiveModalField">Active</label>
                             </div>
 
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="branchInactiveModalField" value="option2" />
-                                <label class="form-check-label" for="branchInactiveModalField">Inactive</label>
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="divInactiveModalField" value="option2" />
+                                <label class="form-check-label" for="divInactiveModalField">Inactive</label>
                             </div>
                         </div>
                     </div>
@@ -196,7 +153,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button onclick="publishBranchChanges();" type="button" class="btn btn-danger">Save changes</button>
+                <button onclick="publishDivisionChanges();" type="button" class="btn btn-danger">Save changes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>

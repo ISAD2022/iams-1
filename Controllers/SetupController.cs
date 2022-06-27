@@ -36,10 +36,19 @@ namespace IAMS.Controllers
             ViewData["DivisionList"] = dBConnection.GetDivisions();
             return View();
         }
+        public IActionResult departments()
+        {
+
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["DepartmentList"] = dBConnection.GetDepartments();
+            return View();
+        }
         public IActionResult audit_zones()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["AuditZoneList"] = dBConnection.GetDepartments();
             return View();
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

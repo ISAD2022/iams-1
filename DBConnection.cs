@@ -124,8 +124,13 @@ namespace IAMS
                     br.ADDRESS = rdr["ADDRESS"].ToString();
                     br.STATUS = rdr["STATUS"].ToString();
                     br.REFERENCE_CIRCULAR = rdr["REFERENCE_CIRCULAR"].ToString();
-                    br.CREATED_ON = Convert.ToDateTime(rdr["CREATED_ON"]);
-                    br.CLOSED_ON = Convert.ToDateTime(rdr["CLOSED_ON"]);
+                    if (rdr["STATUS"].ToString() == "A")
+                        br.STATUS = "Active";
+                    else if (rdr["STATUS"].ToString() == "I")
+                        br.STATUS = "InActive";
+                    else
+                        br.STATUS = rdr["STATUS"].ToString();
+
                     branchList.Add(br);
                 }
             }
@@ -138,7 +143,7 @@ namespace IAMS
             List<DivisionModel> divList = new List<DivisionModel>();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "Select * FROM iamsdev.T_DIVISIONS d WHERE d.Status='A' order by d.NAME asc";
+                cmd.CommandText = "Select * FROM iamsdev.T_DIVISIONS d WHERE d.Status='A' order by d.CODE asc";
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -147,13 +152,48 @@ namespace IAMS
                     div.NAME = rdr["NAME"].ToString();
                     div.CODE = rdr["CODE"].ToString();
                     div.DESCRIPTION = rdr["DESCRIPTION"].ToString();
-                    div.STATUS = rdr["STATUS"].ToString();
+                    if (rdr["STATUS"].ToString() == "A")
+                        div.STATUS = "Active";
+                    else if (rdr["STATUS"].ToString() == "I")
+                        div.STATUS = "InActive";
+                    else
+                        div.STATUS = rdr["STATUS"].ToString();
                     div.REFERENCE_CIRCULAR = rdr["REFERENCE_CIRCULAR"].ToString();
                     divList.Add(div);
                 }
             }
             con.Close();
             return divList;
+        }
+        public List<DepartmentModel> GetDepartments()
+        {
+            var con = this.DatabaseConnection();
+            List<DepartmentModel> deptList = new List<DepartmentModel>();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "Select dp.*, d.NAME as DIV_NAME FROM iamsdev.T_DEPARTMENTS dp inner join iamsdev.T_DIVISIONS d on dp.DIV_ID = d.ID WHERE d.Status='A' order by d.CODE asc";
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    DepartmentModel dept = new DepartmentModel();
+                    dept.ID = Convert.ToInt32(rdr["ID"]);
+                    dept.DIV_ID = Convert.ToInt32(rdr["DIV_ID"]);
+                    dept.NAME = rdr["NAME"].ToString();
+                    dept.CODE = rdr["CODE"].ToString();
+                    dept.OFFICIAL_CODE = rdr["OFFICIAL_CODE"].ToString();
+                    if (rdr["STATUS"].ToString() == "A")
+                        dept.STATUS = "Active";
+                    else if (rdr["STATUS"].ToString() == "I")
+                        dept.STATUS = "InActive";
+                    else
+                        dept.STATUS = rdr["STATUS"].ToString();
+                    dept.REFERENCE_CIRCULAR = rdr["REFERENCE_CIRCULAR"].ToString();
+                    dept.DIV_NAME = rdr["DIV_NAME"].ToString();
+                    deptList.Add(dept);
+                }
+            }
+            con.Close();
+            return deptList;
         }
     }
 }
