@@ -23,7 +23,7 @@ namespace IAMS.Controllers
 
         public IActionResult Index()
         {
-            ViewData["TopMenu"] = tm.GetTopMenus();
+           ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }

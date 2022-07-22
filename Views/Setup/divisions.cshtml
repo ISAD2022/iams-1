@@ -31,7 +31,7 @@
         $('#divAddressModalField').val(desc);
         if (status == "Active")
             $('#divActiveModalField').click();
-        else if (status == "Inactive")
+        else if (status == "InActive")
             $('#divInactiveModalField').click();
 
         $('#setupDivModal').modal('show');
@@ -43,16 +43,39 @@
         var name= $('#divNameModalField').val();
         var desc = $('#divAddressModalField').val();
         var status;
-        if ($('#divActiveModalField').is(':checked'))
+        var badge;
+        if ($('#divActiveModalField').is(':checked')) {
             status = 'Active';
-        else
+            badge = 'badge-success ';
+        }
+        else {
             status = 'InActive';
+            badge = 'badge-danger ';
+        }
         if (g_divId == 0)
-            var row = "<tr id=\"div_" + g_divId + "\"><td class=\"div_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"div_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"div_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"div_status\"><span class=\"badge badge-success rounded-pill d-inline\">Active</span></td><td class=\"div_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDivision(" + code + "," + name + "," + desc + "," + status + "," + g_divId + ");\">Edit</button></td></tr>";
+            var row = "<tr id=\"div_" + g_divId + "\"><td class=\"div_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"div_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"div_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"div_status\"><span class=\"badge " + badge+" rounded-pill d-inline\">" + status + "</span></td><td class=\"div_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDivision('" + code + "','" + name + "','" + desc + "','" + status + "','" + g_divId + "');\">Edit</button></td></tr>";
         else
-            $('#div_' + g_divId).html("<td class=\"div_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"div_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"div_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"div_status\"><span class=\"badge badge-success rounded-pill d-inline\">Active</span></td><td class=\"div_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDivision(" + code + "," + name + "," + desc + "," + status + "," + g_divId + ");\">Edit</button></td>");
+            $('#div_' + g_divId).html("<td class=\"div_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"div_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"div_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"div_status\"><span class=\"badge " + badge +" rounded-pill d-inline\">" + status + "</span></td><td class=\"div_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDivision('" + code + "','" + name + "','" + desc + "','" + status + "','" + g_divId + "');\">Edit</button></td>");
         $('#listOfDivision tbody').append(row);
         $('#setupDivModal').modal('hide');
+        $.ajax({
+            url: "/Setup/division_add",
+            type: "POST",
+            data: {
+                'id':g_divId,
+                'code': code,
+                'name': name,
+                'description': desc,
+                'status': status
+            },
+            cache: false,
+            success: function (data) {
+                console.log(data);
+                window.location = window.location.pathname;
+                
+            },
+            dataType:"json",
+        });
     }
 </script>
 
@@ -84,7 +107,7 @@
                     foreach (var item in (dynamic)(ViewData["DivisionList"]))
                     {
 
-                        <tr id="div_@item.ID">
+                        <tr id="div_@item.DIVISIONID">
                             <td class="div_code">
                                 <p class="fw-normal mb-1">@item.CODE</p>
                             </td>
@@ -95,11 +118,18 @@
                             <td class="div_desc">
                                 <p class="fw-normal mb-1">@item.DESCRIPTION</p>
                             </td>
+                            
                             <td class="div_status">
-                                <span class="badge badge-success rounded-pill d-inline">@item.STATUS</span>
-                            </td>
+                                @{
+                                    if (item.ISACTIVE == "Active")
+
+                                    {  <span class="badge badge-success rounded-pill d-inline">@item.ISACTIVE</span>}
+                                    else
+                                    {  <span class="badge badge-danger rounded-pill d-inline">@item.ISACTIVE</span>}
+                                    }
+                                    </td>
                             <td class="div_action">
-                                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupDivision('@item.CODE','@item.NAME','@item.DESCRIPTION','@item.STATUS','@item.ID');">
+                                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupDivision('@item.CODE','@item.NAME','@item.DESCRIPTION','@item.ISACTIVE','@item.DIVISIONID');">
                                     Edit
                                 </button>
                             </td>

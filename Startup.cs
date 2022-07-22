@@ -26,7 +26,9 @@ namespace IAMS
         {
             services.AddDistributedMemoryCache();
             services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);//You can set Time   
+                options.IdleTimeout = TimeSpan.FromSeconds(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
             services.AddControllersWithViews();
         }
@@ -55,7 +57,7 @@ namespace IAMS
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Setup}/{action=divisions}/{id?}");
+                    pattern: "{controller=Login}/{action=Index}/{id?}");
             });
             
         }

@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using IAMS.Models;
 using IAMS.Controllers;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace IAMS.Controllers
 {
@@ -15,6 +16,7 @@ namespace IAMS.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private readonly DBConnection dBConnection = new DBConnection();
+        private readonly SessionHandler sessionHandler = new SessionHandler();
 
         public LoginController(ILogger<LoginController> logger)
         {
@@ -30,8 +32,8 @@ namespace IAMS.Controllers
         {
             string ppno = login.PPNumber;
             string password = login.Password;
-            var user=dBConnection.AutheticateLogin(login); 
-            if(user.ID != 0)
+            var user=dBConnection.AutheticateLogin(login);
+            if (user.ID != 0)
             {
                 return RedirectToAction("Index", "Home");
             }else

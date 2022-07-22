@@ -1,19 +1,20 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IAMS.Models
 {
     public class BranchModel
     {        
-        public int ID { get; set; }
-        public int ZONE_ID { get; set; }
-        public string BR_NAME { get; set; }
-        public string BR_CODE { get; set; }
-        public string ADDRESS { get; set; }
-        public DateTime? CREATED_ON { get; set; }
-        public DateTime? CLOSED_ON { get; set; }
-        public string STATUS { get; set; }
-        public string REFERENCE_CIRCULAR { get; set; }
-        public int AZ_ID { get; set; }
-        public int CAD_ID { get; set; }
+        public int BRANCHID { get; set; }
+        public int ZONEID { get; set; }
+        public string BRANCHNAME { get; set; }
+        public string DESCRIPTION { get; set; }
+        public string ISACTIVE { get; set; }
+        public string BRANCHCODE { get; set; }
+        public int BRANCH_SIZE_ID { get; set; }
+        [NotMapped]
+        public string BRANCH_SIZE { get; set; }
+        [NotMapped]
+        public string ZONE_NAME { get; set; }
     }
 }

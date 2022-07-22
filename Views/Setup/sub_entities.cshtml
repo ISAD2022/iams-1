@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Sub Entities";
+    Layout = "_Layout";
+
+}
+
+<script type="text/javascript">
+    
+    function showDepartmentBlock() {
+
+        if ($('#divSelectionBox option:selected').val() == 0) {
+            $('.deptBlock').addClass('d-none');
+            $('#deptSelectionBox').empty();
+
+        }
+        else {
+            $('#deptSelectionBox').empty();
+            $('#deptSelectionBox').append('<option value="0" id="0">--Select Department--</option>');
+            $('.deptBlock').removeClass('d-none');
+            $.ajax({
+                url: "/Setup/get_departments",
+                type: "POST",
+                data: {
+                    'div_id': $('#divSelectionBox option:selected').val()
+                },
+                cache: false,
+                success: function (data) {
+                    $.each(data, function (index, dept) {
+                        $('#deptSelectionBox').append('<option value="' + dept.code + '" id="' + dept.code+'">'+dept.name+'</option>');
+                    });
+                },
+                dataType: "json",
+            });
+
+        }
+    }
+    function ShowSubEntities() {
+
+        if ($('#deptSelectionBox option:selected').val() == 0) {
+            $('.subEntity').addClass('d-none');
+            $('#listofSubEntities tbody').empty();
+
+        }
+        else {
+            $('#listofSubEntities tbody').empty();
+            $('.subEntity').removeClass('d-none');
+            $.ajax({
+                url: "/Setup/get_sub_entities",
+                type: "POST",
+                data: {
+                    'dept_id': $('#deptSelectionBox option:selected').val()
+                },
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    $.each(data, function (index, dept) {
+                       // $('#deptSelectionBox').append('<option value="' + dept.code + '" id="' + dept.code + '">' + dept.name + '</option>');
+                    });
+                },
+                dataType: "json",
+            });
+
+        }
+    }
+</script>
+
+<div class="col-md-12" style="margin-top:20px;">
+    <h5>Sub Entities</h5>
+    <div class="row col-md-12">
+        <div class="col-md-2 mt-2">
+            <label class="font-weight-normal">Division</label>
+        </div>
+        <div class="col-md-10 mt-2">
+            <select id="divSelectionBox" onchange="showDepartmentBlock();" class="form-select form-control" aria-label="Default select example">
+                <option value="0" selected>--Select Division--</option>
+                @{
+                    if (ViewData["DivisionList"] != null)
+                    {
+                        foreach (var item in (dynamic)(ViewData["DivisionList"]))
+                        {
+                            <option value="@item.CODE" id="@item.CODE">@item.NAME</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row col-md-12 deptBlock d-none">
+        <div class="col-md-2 mt-2">
+            <label class="font-weight-normal">Department</label>
+        </div>
+        <div class="col-md-10 mt-2">
+            <select id="deptSelectionBox" onclick="ShowSubEntities();"  class="form-select form-control" aria-label="Default select example">
+                <option value="0" selected>--Select Department--</option>
+            </select>
+        </div>
+    </div>
+    <div class="row col-md-12 subEntity d-none">
+        <table id="listofSubEntities" class="table align-middle mb-0 bg-white table-hover table-striped">
+            <thead class="bg-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Division Name</th>
+                    <th>Department Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

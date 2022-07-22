@@ -9,62 +9,53 @@ using System.Threading.Tasks;
 
 namespace IAMS.Controllers
 {
-    public class RsikAssessmentController : Controller
+    public class RiskAssessmentController : Controller
     {
-        private readonly ILogger<RsikAssessmentController> _logger;
+        private readonly ILogger<RiskAssessmentController> _logger;
+        private readonly TopMenus tm = new TopMenus();
+        private readonly DBConnection dBConnection = new DBConnection();
 
-        public RsikAssessmentController(ILogger<RsikAssessmentController> logger)
+        public RiskAssessmentController(ILogger<RiskAssessmentController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult audit_criteria()
+        public IActionResult risk_model()
         {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
-        public IActionResult audit_period()
+        public IActionResult risk_assessment_table()
         {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
-        public IActionResult holiday_calendar()
+        public IActionResult risk_assessment_branches()
         {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
-        public IActionResult plan_approvals()
+        public IActionResult risk_assessment_ho_units()
         {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
-        public IActionResult post_changes_approved_plan()
+        public IActionResult risk_assessment_divisions()
         {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
-        public IActionResult post_changes_team_members()
+        public IActionResult risk_assessment_functions()
         {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
-        public IActionResult special_assignment()
-        {
-            return View();
-        }
-        public IActionResult submission_for_approval()
-        {
-            return View();
-        }
-        public IActionResult submission_for_review()
-        {
-            return View();
-        }
-        public IActionResult team_members()
-        {
-            return View();
-        }
-        public IActionResult tentative_audit_plan()
-        {
-            return View();
-        }
-
-
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

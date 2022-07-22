@@ -9,16 +9,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IAMS.Models;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 
 namespace IAMS
 {
+
     public class TopMenus
     {
+        private readonly DBConnection dBConnection = new DBConnection();
         public List<Object> GetTopMenus()
         {
-            DBConnection dBConnection = new DBConnection();
-            var menus=dBConnection.GetTopMenus();
+            
+            var menus =dBConnection.GetTopMenus();
             List<object> menuList = new List<object>();
             foreach (var item in menus)
             {
@@ -29,7 +33,6 @@ namespace IAMS
 
         public List<Object> GetTopMenusPages()
         {
-            DBConnection dBConnection = new DBConnection();
             var menus = dBConnection.GetTopMenuPages();
             List<object> menuList = new List<object>();
             foreach (var item in menus)

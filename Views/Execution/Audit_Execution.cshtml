@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "Audit Execution";
+    Layout = "_Layout";
+}
+
+<script type="text/javascript">
+    $('#document').ready(function () {
+        $('#sidebar_policy').hide();
+    });
+</script>
+<div class="row w-100 col-md-12 mt-3">
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link " href="#">General</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Working Papers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">ORA</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1"
+               aria-disabled="true">WP-SP</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1"
+               aria-disabled="true">Observation</a>
+        </li>
+    </ul>
+</div>
+<hr class="w-100" style="margin-top:0px; margin-bottom:20px; color:blue;" /> <div class="row w-100 col-md-12 mt-3">
+    <div class="col-md-4" style="padding:20px;">
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" type="button"
+                                data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                                aria-controls="collapseOne">
+                            Step 1
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show"
+                     aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Content Here
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                                aria-controls="collapseTwo">
+                            Step 2
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse"
+                     aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Content Here
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button"
+                                data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
+                                aria-controls="collapseThree">
+                            Step 3
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse"
+                     aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Content Here
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8" style="padding:20px;">
+        <div>
+            <Span>Working Paper Id</Span> <input type="text" class="row" style="margin-left:10px;">
+        </div>
+        <div>
+            <label>Working Paper Name </label><input type="text" class="row" style="margin-left:10px;">
+        </div>
+        <div>
+            <label>Working Paper Id </label><input type="text" class="row" style="margin-left:10px;">
+        </div>
+        <div>
+            <label>Comments </label><textarea class="row" style="margin-left:10px;"></textarea>
+        </div>
+        <div>
+            <label>Working Paper Id </label><input type="text" class="row" style="margin-left:10px;">
+        </div>
+        <div>
+            <label>Control Status</label> <select id="deptSelectionBox" onchange="ShowEmployeeContainer();" class="form-select form-control" aria-label="Default select example">
+                <option value="0" selected>Control Status</option>
+                <option>Effective</option>
+                <option>Partially effective</option>
+                <option>Not Effective</option>
+
+            </select>
+        </div>
+        <div class="row w-100 col-md-12 mt-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link " href="#">Fieldwork</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Findings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Sampling Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Attached Documents</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Team Constitution</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1"
+                       aria-disabled="true"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="listofEmployeesContainer" class="row w-100">
+            <table id="listOfEmployeeTeam" class="table align-middle mb-0 table-bordered bg-white table-hover table-striped">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="col-md-1">#</th>
+                        <th class="col-md-3">Step Name</th>
+                        <th class="col-md-7">Work Done</th>
+                        <th class="col-md-1">Supporting Documents</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><p class="fw-normal mb-1">1</p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><p class="fw-normal mb-1">2</p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><p class="fw-normal mb-1">3</p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><p class="fw-normal mb-1">4</p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td><p class="fw-normal mb-1"></p></td>
+                        <td></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
