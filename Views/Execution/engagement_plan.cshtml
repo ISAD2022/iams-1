@@ -7,11 +7,12 @@
     var g_teams = [];
     var g_branches = [];
     $(document).ready(function () {
-        $('#sidebar_policy').hide();
-        $('.hiddenContainers').hide();
-        $('.fieldAuditFields').hide();
-        $('.nonFieldAuditFields').hide();
-        $('#branchInfoArea').hide();
+        $('#deptSelectionBox').addClass('d-none');
+        $('.hiddenContainers').addClass('d-none');
+        $('.fieldAuditFields').addClass('d-none');
+        $('.nonFieldAuditFields').addClass('d-none');
+        $('#branchInfoArea').addClass('d-none');        
+        ShowDepartmentAuditPeriods();
 
     });
     function getBusinessDateCount(startDate, endDate) {
@@ -34,15 +35,15 @@
     }
     function ShowDepartmentAuditPeriods() {
         if ($('#deptSelectionBox option:selected').val() == 0)
-            $('.hiddenContainers').hide();
+            $('.hiddenContainers').addClass('d-none');
         else {
-            $('.hiddenContainers').show();
+             $('.hiddenContainers').removeClass('d-none');
             if ($('#deptSelectionBox option:selected').val() == '473') {
-                $('.fieldAuditFields').show();
-                $('.nonFieldAuditFields').hide();
+                 $('.fieldAuditFields').removeClass('d-none');
+                $('.nonFieldAuditFields').addClass('d-none');
             } else {
-                $('.nonFieldAuditFields').show();
-                $('.fieldAuditFields').hide();
+                $('.nonFieldAuditFields').removeClass('d-none');
+                $('.fieldAuditFields').addClass('d-none');
             }
             $.ajax({
                 url: "/Planning/audit_periods",
@@ -86,12 +87,13 @@
     function ShowSelectedZonesBranches() {
         if ($('#auditZoneSelectionBox option:selected').val() == 0) {
             $('#branchSelectionBox').empty();
-            $('#branchInfoArea').hide();
-            $('#branchSelectionBox').append('<option value="0" id="0">--Select Audit Branch--</option>')
+            $('#branchInfoArea').addClass('d-none');
+            $('#branchSelectionBox').append('<option value="0" id="0">--Select Audit Branch--</option>');
         }
         else {
             $('#branchSelectionBox').empty();
-            $('#branchInfoArea').hide();
+            $('#branchInfoArea').removeClass('d-none');
+            $('#branchSelectionBox').append('<option value="0" id="0">--Select Audit Branch--</option>')
             $.ajax({
                 url: "/Planning/zone_branches",
                 type: "POST",
@@ -139,16 +141,20 @@
                 },
                 dataType: "json",
             });
+            getSubEntities();
         }
     }
     function ShowBranchInfoBox() {
-        $('#branchInfoArea').show();
+        if ($('#branchSelectionBox option:selected').val() == 0) {
+            $('#branchInfoArea').addClass('d-none');
+        } else {
+            $('#branchInfoArea').removeClass('d-none');}
     }
     function previewAuditPlan() {
         $('#previewAuditPlan').modal('show');
         $('#auditorDept').text($('#deptSelectionBox option:selected').text());
         $('#auditorPlan').text($('#periodSelectionBox option:selected').text());
-        $('#descModal_field').html($('#descriptionAuditPlanField').val());
+        $('#descModal_field').html($('#entitySelectionBox option:selected').text());
         if ($('#deptSelectionBox option:selected').val() == '473') {
             $('#divzone_field').text($('#auditZoneSelectionBox option:selected').text());
             $('#deptBranch_field').text($('#branchSelectionBox option:selected').text());
@@ -182,7 +188,10 @@
         $('#teamMembers_field').html(teamMembersFields);
 
     }
-    function publishNewAuditPlanChanges(){
+    function publishNewAuditPlanChanges() {
+
+        alert("Under Construction");
+        return false;
         var periodId = $('#periodSelectionBox option:selected').val();
         var stDate = $('#executionPeriodFromField').val();
         var edDate = $('#executionPeriodToField').val();
@@ -230,29 +239,56 @@
             dataType: "json",
         });
     }
+    function getSubEntities() {
+        if ($('#divSelectionBox option:selected').val() != 0) {
+            $('#entitySelectionBox').empty();
+            $('#entitySelectionBox').append('<option value="0" id="0" selected="selected">--Select Sub Entity--</option>');
+            $.ajax({
+                url: "/Setup/get_sub_entities",
+                type: "POST",
+                data: {
+                    'div_id': $('#divSelectionBox option:selected').val(),
+                    'dept_id': $('#divDeptSelectionBox option:selected').val(),
+                },
+                cache: false,
+                success: function (data) {
+                  $.each(data, function (index, ent) {
+                      $('#entitySelectionBox').append('<option value="'+ent.id+'" id="'+ent.id+'" >'+ent.name+'</option>');
+                    });
+
+                },
+                dataType: "json",
+            });
+           
+        } else
+        {
+            $('#entitySelectionBox').empty();
+            $('#entitySelectionBox').append('<option value="0" id="0" selected="selected">--Select Sub Entity--</option>');
+        }
+        
+
+    }
 </script>
 <div class="row w-100">
     <div class="col-md-8">
-        <h3 style="color: #45c545;">Create Engagement Plan</h3>
-        <h5>Select Department</h5>
-        <select id="deptSelectionBox" onchange="ShowDepartmentAuditPeriods();" class="form-select form-control">
-            <option value="0" selected>Select Your Department</option>
-            @{
+        <h3 style="color: #45c545;">Create Audit Plan</h3>
+       <select id="deptSelectionBox" onchange="ShowDepartmentAuditPeriods();" class="form-select form-control">
+           @{
                 if (ViewData["AuditDepartments"] != null)
                 {
                     foreach (var item in (dynamic)(ViewData["AuditDepartments"]))
                     {
-                        <option value="@item.CODE" id="@item.CODE">@item.NAME</option>
+                        <option selected="selected" value="@item.CODE" id="@item.CODE">@item.NAME</option>
                     }
                 }
             }
 
         </select>
-        <div class="hiddenContainers mt-3">
+        <div class="hiddenContainers d-none mt-3">
             <h5>Select Audit Period</h5>
             <select id="periodSelectionBox" class="form-select form-control">
             </select>
-            <div class="row fieldAuditFields mt-3">
+            <div class="row fieldAuditFields mt-3 d-none">
                 <div class="col-md-6">
                     <h5>Select Audit Zone</h5>
                     <select id="auditZoneSelectionBox" onchange="ShowSelectedZonesBranches();" class="form-select form-control" aria-label="Default select example">
@@ -272,6 +308,7 @@
                 <div class="col-md-6">
                     <h5>Select Audit Branch</h5>
                     <select id="branchSelectionBox" onchange="ShowBranchInfoBox();" class="form-select form-control" aria-label="Default select example">
+                        <option value="0" id="0">--Select Audit Branch--</option>
                     </select>
                 </div>
             </div>
@@ -294,14 +331,18 @@
                 </div>
                 <div class="col-md-6">
                     <h5>Select Audit Department</h5>
-                    <select id="divDeptSelectionBox" class="form-select form-control" aria-label="Default select example">
+                    <select id="divDeptSelectionBox" onchange="getSubEntities();" class="form-select form-control" aria-label="Default select example">
+                        <option value="0" id="0">--Select Audit Department--</option>
                     </select>
                 </div>
             </div>
             <div class="row mt-3 w-100">
-                <div class="col-md-12"><h5>Description</h5></div>
+                <div class="col-md-12"><h5>Entities</h5></div>
                 <div class="col-md-12">
-                   <input id="descriptionAuditPlanField" class="form-control" type="text" />
+                    <select id="entitySelectionBox" class="form-select form-control" aria-label="Default select example">
+                        <option value="0" id="0" selected>--Select Sub Entity--</option>
+                       
+                    </select>
                 </div>
                </div>
             <div class="row mt-3 w-100">
@@ -352,7 +393,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div id="branchInfoArea" class="mt-3 col-md-12">
+        <div id="branchInfoArea" class="mt-3 col-md-12 d-none">
             <h5>Branch Information</h5>
             <table class="table table-bordered table mb-0 mt-3 bg-white table-hover table-striped">
 
@@ -431,7 +472,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label><b>Description</b></label>
+                            <label><b>Entities</b></label>
                         </div>
                         <div class="col-md-6">
                             <label id="descModal_field"></label>
