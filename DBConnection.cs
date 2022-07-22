@@ -284,6 +284,36 @@ namespace IAMS
             }
             con.Close();
         }
+        public List<AuditZoneModel> GetAuditZones()
+        {
+            var con = this.DatabaseConnection();
+            List<AuditZoneModel> AZList = new List<AuditZoneModel>();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "Select z.* FROM T_auditzone z order by z.ZONENAME asc";
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    AuditZoneModel z = new AuditZoneModel();
+                    z.ID = Convert.ToInt32(rdr["ID"]);
+                    z.ZONECODE = rdr["ZONECODE"].ToString();
+                    z.ZONENAME = rdr["ZONENAME"].ToString();
+                    z.DESCRIPTION = rdr["DESCRIPTION"].ToString();
+                    if (rdr["ISACTIVE"].ToString() == "A")
+                        z.ISACTIVE = "Active";
+                    else if (rdr["ISACTIVE"].ToString() == "I")
+                        z.ISACTIVE = "InActive";
+                    else
+                        z.ISACTIVE = rdr["ISACTIVE"].ToString();
+
+                    AZList.Add(z);
+                }
+            }
+            con.Close();
+            return AZList;
+        }
+
+
         public List<BranchModel> GetBranches(int zone_code=0)
         {
             var con = this.DatabaseConnection();
@@ -489,36 +519,49 @@ namespace IAMS
             con.Close();
             return deptList;
         }
-        public List<DepartmentModel> GetSubEntities(int div_code)
+        public List<SubEntitiesModel> GetSubEntities(int div_code=0, int dept_code=0)
         {
             var con = this.DatabaseConnection();
-            List<DepartmentModel> deptList = new List<DepartmentModel>();
+            List<SubEntitiesModel> entitiesList = new List<SubEntitiesModel>();
             using (OracleCommand cmd = con.CreateCommand())
             {
                 if (div_code == 0)
-                    cmd.CommandText = "Select dp.*, d.NAME as DIV_NAME FROM v_service_department dp inner join v_service_division d on dp.DIVISIONID = d.CODE WHERE dp.ISACTIVE='Y' order by dp.CODE asc";
-                else
-                    cmd.CommandText = "Select dp.*, d.NAME as DIV_NAME FROM v_service_department dp inner join v_service_division d on dp.DIVISIONID = d.CODE WHERE dp.DIVISIONID=" + div_code + " and dp.ISACTIVE='Y' order by dp.CODE asc";
-                OracleDataReader rdr = cmd.ExecuteReader();
+                {
+                    if (dept_code == 0)
+                        cmd.CommandText = "Select s.*, d.NAME as DIV_NAME, dp.NAME as DEPT_NAME FROM T_SUBENTITY s inner join v_service_division d on s.DIV_ID = d.DIVISIONID inner join v_service_department dp on s.DEP_ID=dp.ID WHERE s.STATUS='Y' order by s.NAME asc";
+                    else
+                        cmd.CommandText = "Select s.*, d.NAME as DIV_NAME, dp.NAME as DEPT_NAME FROM T_SUBENTITY s inner join v_service_division d on s.DIV_ID = d.DIVISIONID inner join v_service_department dp on s.DEP_ID=dp.ID WHERE s.STATUS='Y' and dp.ID=" + dept_code+" order by s.NAME asc";
+
+                }
+                else {
+                    if (dept_code == 0)
+                        cmd.CommandText = "Select s.*, d.NAME as DIV_NAME, dp.NAME as DEPT_NAME FROM T_SUBENTITY s inner join v_service_division d on s.DIV_ID = d.DIVISIONID inner join v_service_department dp on s.DEP_ID=dp.ID WHERE d.DIVISIONID="+div_code+ " and s.STATUS='Y' order by s.NAME asc";
+                    else
+                        cmd.CommandText = "Select s.*, d.NAME as DIV_NAME, dp.NAME as DEPT_NAME FROM T_SUBENTITY s inner join v_service_division d on s.DIV_ID = d.DIVISIONID inner join v_service_department dp on s.DEP_ID=dp.ID WHERE d.DIVISIONID=" + div_code + " and s.STATUS='Y' and dp.ID=" + dept_code + " order by s.NAME asc";
+
+                }
+
+                  OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    DepartmentModel dept = new DepartmentModel();
-                    dept.ID = Convert.ToInt32(rdr["ID"]);
-                    dept.DIV_ID = Convert.ToInt32(rdr["DIVISIONID"]);
-                    dept.NAME = rdr["NAME"].ToString();
-                    dept.CODE = rdr["CODE"].ToString();
-                    if (rdr["ISACTIVE"].ToString() == "Y")
-                        dept.STATUS = "Active";
-                    else if (rdr["ISACTIVE"].ToString() == "N")
-                        dept.STATUS = "InActive";
+                    SubEntitiesModel entity = new SubEntitiesModel();
+                    entity.ID = Convert.ToInt32(rdr["ID"]);
+                    entity.DIV_ID = Convert.ToInt32(rdr["DIV_ID"]);
+                    entity.DEP_ID = Convert.ToInt32(rdr["DEP_ID"]);
+                    entity.NAME = rdr["NAME"].ToString();
+                    entity.Division_Name = rdr["DIV_NAME"].ToString();
+                    entity.Department_Name = rdr["DEPT_NAME"].ToString();
+                    if (rdr["STATUS"].ToString() == "Y")
+                        entity.STATUS = "Active";
+                    else if (rdr["STATUS"].ToString() == "N")
+                        entity.STATUS = "InActive";
                     else
-                        dept.STATUS = rdr["ISACTIVE"].ToString();
-                    dept.DIV_NAME = rdr["DIV_NAME"].ToString();
-                    deptList.Add(dept);
+                        entity.STATUS = rdr["STATUS"].ToString();
+                    entitiesList.Add(entity);
                 }
             }
             con.Close();
-            return deptList;
+            return entitiesList;
         }
         public SubEntitiesModel AddSubEntity(SubEntitiesModel subentity)
         {
@@ -526,6 +569,18 @@ namespace IAMS
             using (OracleCommand cmd = con.CreateCommand())
             {
                 cmd.CommandText = "INSERT INTO T_SUBENTITY d (d.ID,d.NAME, d.DIV_ID, d.DEP_ID, d.STATUS) VALUES ( (SELECT COALESCE(max(PP.ID)+1,1) FROM T_SUBENTITY PP),'" + subentity.NAME + "','" + subentity.DIV_ID + "','" + subentity.DEP_ID + "','" + subentity.STATUS + "')";
+                OracleDataReader rdr = cmd.ExecuteReader();
+
+            }
+            con.Close();
+            return subentity;
+        }
+        public SubEntitiesModel UpdateSubEntity(SubEntitiesModel subentity)
+        {
+            var con = this.DatabaseConnection();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "UPDATE T_SUBENTITY d SET d.NAME = '"+subentity.NAME+"' , d.DIV_ID='"+subentity.DIV_ID+"', d.DEP_ID='"+subentity.DEP_ID+"', d.STATUS='"+subentity.STATUS+"'  WHERE d.ID='"+subentity.ID+"'";
                 OracleDataReader rdr = cmd.ExecuteReader();
 
             }

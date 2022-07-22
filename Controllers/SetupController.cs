@@ -94,9 +94,10 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            ViewData["AuditZoneList"] = dBConnection.GetDepartments();
+            ViewData["AuditZoneList"] = dBConnection.GetAuditZones();
             return View();
         }
+
         public IActionResult processes()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
@@ -109,20 +110,32 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            ViewData["DivisionList"] = dBConnection.GetDivisions();
-            ViewData["DepartmentList"] = dBConnection.GetDepartments();
-            ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
+            ViewData["SubEntitiesList"] = dBConnection.GetSubEntities();
+            ViewData["DivisionList"] = dBConnection.GetDivisions(false);
+            ViewData["DepartmentList"] = dBConnection.GetDepartments(0,false);
             return View();
         }
         [HttpPost]
         public List<DepartmentModel> get_departments(int div_id)
         {
-            return dBConnection.GetDepartments(div_id);
+            return dBConnection.GetDepartments(div_id,false);
         }
         [HttpPost]
-        public List<DepartmentModel> get_sub_entities(int dept_id)
+        public List<SubEntitiesModel> get_sub_entities(int div_id=0,int dept_id=0)
         {
-            return dBConnection.GetSubEntities(dept_id);
+            return dBConnection.GetSubEntities(div_id,dept_id);
+        }
+        [HttpPost]
+        public SubEntitiesModel add_sub_entity(SubEntitiesModel entity)
+        {
+            if (entity.STATUS == "Active")
+                entity.STATUS = "Y";
+            else
+                entity.STATUS = "N";
+            if(entity.ID==0)
+                return dBConnection.AddSubEntity(entity);
+            else
+                return dBConnection.UpdateSubEntity(entity);
         }
         [HttpPost]
         public List<RiskProcessDetails> process_details(int ProcessId)

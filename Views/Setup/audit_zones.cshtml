@@ -1,186 +1,151 @@
-﻿@{
-    ViewData["Title"] = "BranchSetup";
+﻿
+@{
+    ViewData["Title"] = "AuditZone";
     Layout = "_Layout";
-
 }
+
 <script type="text/javascript">
     $(document).ready(function () {
+        var g_divId = 0;
         $('#sidebar_policy').hide();
         $("#searchTableRecord").on("keyup", function () {
             var value = $(this).val().toLowerCase();
-            $("#listOfBranches tbody tr").filter(function () {
+            $("#listOfAuditZone tbody tr").filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
     });
 
-    function newBranchSetup() {
-        $('#setupBranchModal').modal('show');
-        $('#branchCodeModalField').val('');
-        $('#branchNameModalField').val('');
-        $('#branchZoneModalField').val('');
-        $('#branchAddressModalField').val('');
+    function newAZSetup() {
+        g_divId = 0;
+        $('#setupAZModal').modal('show');
+        $('#AZCodeModalField').val('');
+        $('#AZNameModalField').val('');
+        $('#AZAddressModalField').val('');
     }
 
-    function setupBranch(code, name, zone, address, status) {
-        $('#branchCodeModalField').val(code);
-        $('#branchNameModalField').val(name);
-        $('#branchZoneModalField').val(zone);
-        $('#branchAddressModalField').val(address);
+    function setupAuditZone(code, name, desc, status, id) {
+        g_AZId = id;
+        console.log(code, name, desc, status, id);
+        $('#AZCodeModalField').val(code);
+        $('#AZNameModalField').val(name);
+        $('#AZAddressModalField').val(desc);
         if (status == "Active")
-            $('#branchActiveModalField').click();
-        else if (status == "Inactive")
-            $('#branchInactiveModalField').click();
+            $('#AZActiveModalField').click();
+        else if (status == "InActive")
+            $('#AZInactiveModalField').click();
 
-        $('#setupBranchModal').modal('show');
+        $('#setupAZModal').modal('show');
     }
 
-    function publishBranchChanges() {
-        
-        //$('#listOfBranches tbody').append('<tr><td></td>');
+    function publishAuditZoneChanges() {
+
+        var code = $('#AZCodeModalField').val();
+        var name = $('#AZNameModalField').val();
+        var desc = $('#AZAddressModalField').val();
+        var status;
+        var badge;
+        if ($('#AZActiveModalField').is(':checked')) {
+            status = 'Active';
+            badge = 'badge-success ';
+        }
+        else {
+            status = 'InActive';
+            badge = 'badge-danger ';
+        }
+        if (g_divId == 0)
+            var row = "<tr id=\"AZ_" + g_AZId + "\"><td class=\"AZ_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"AZ_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"AZ_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"AZ_status\"><span class=\"badge " + badge + " rounded-pill d-inline\">" + status + "</span></td><td class=\"AZ_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupAuditZone('" + code + "','" + name + "','" + desc + "','" + status + "','" + g_AZId + "');\">Edit</button></td></tr>";
+        else
+            $('#div_' + g_AZId).html("<td class=\"AZ_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"AZ_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"AZ_desc\"><p class=\"fw-normal mb-1\">" + desc + "</p></td><td class=\"AZ_status\"><span class=\"badge " + badge + " rounded-pill d-inline\">" + status + "</span></td><td class=\"AZ_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupAuditZone('" + code + "','" + name + "','" + desc + "','" + status + "','" + g_AZId + "');\">Edit</button></td>");
+        $('#listOfAuditZone tbody').append(row);
+        $('#setupAZModal').modal('hide');
+        $.ajax({
+            url: "/Setup/AuditZone_add",
+            type: "POST",
+            data: {
+                'id': g_AZId,
+                'code': code,
+                'name': name,
+                'description': desc,
+                'status': status
+            },
+            cache: false,
+            success: function (data) {
+                console.log(data);
+                window.location = window.location.pathname;
+
+            },
+            dataType: "json",
+        });
     }
 </script>
 
 <div class="col-md-12" style="margin-top:20px;">
-    <h3>List of Branches</h3>
+    <h3>List of Audit Zones</h3>
     <div class="row">
         <div class="col-md-10">
             <input class="form-control" id="searchTableRecord" type="text" placeholder="Search..">
         </div>
         <div class="col-md-2">
-            <button onclick="newBranchSetup();" class="btn btn-danger w-100">Add New</button>     
-        </div>       
+            <button onclick="newAZSetup();" class="btn btn-danger w-100">Add New Audit Zone</button>
+        </div>
     </div>
     <br>
-    <table id="listOfBranches" class="table align-middle mb-0 bg-white table-hover table-striped">
+    <table id="listOfAuditZone" class="table align-middle mb-0 bg-white table-hover table-striped">
         <thead class="bg-light">
             <tr>
-                <th>Branch Code</th>
-                <th>Branch Name</th>
-                <th>Zone Name</th>
-                <th>Address</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <p class="fw-normal mb-1">24402</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Head Office Branch</p>
-                    <!--<p class="text-muted mb-0">IT department</p>-->
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Islamabad</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">1 Faisal Avenue G-7/1, Zero Point, Islamabad</p>
-                </td>
-                <!--<td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                             alt=""
-                             style="width: 45px; height: 45px"
-                             class="rounded-circle" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">John Doe</p>
-                            <p class="text-muted mb-0">john.doe@gmail.com</p>
-                        </div>
-                    </div>
-                </td>-->
+            @{
+                if (ViewData["AuditZoneList"] != null)
+                {
+                    foreach (var item in (dynamic)(ViewData["AuditZoneList"]))
+                    {
 
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24402','Head Office Branch','Islamabad','1 Faisal Avenue G-7/1, Zero Point, Islamabad','Active');">
-                        Edit
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="fw-normal mb-1">24401</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Islamabad Branch</p>
-                    <!--<p class="text-muted mb-0">IT department</p>-->
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Islamabad</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Zero Point, Islamabad</p>
-                </td>
-                <!--<td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                             alt=""
-                             style="width: 45px; height: 45px"
-                             class="rounded-circle" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">John Doe</p>
-                            <p class="text-muted mb-0">john.doe@gmail.com</p>
-                        </div>
-                    </div>
-                </td>-->
+                        <tr id="AZ_@item.ID">
+                            <td class="AZ_code">
+                                <p class="fw-normal mb-1">@item.ZONECODE</p>
+                            </td>
+                            <td class="AZ_name">
+                                <p class="fw-normal mb-1">@item.ZONENAME</p>
+                                
+                            </td>
+                            <td class="AZ_desc">
+                                <p class="fw-normal mb-1">@item.DESCRIPTION</p>
+                            </td>
 
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24401','Islamabad Branch','Islamabad','Zero Point, Islamabad','Active');">
-                        Edit
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="fw-normal mb-1">24403</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Rawalpind Cantt Branch</p>
-                    <!--<p class="text-muted mb-0">IT department</p>-->
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Rawalpindi</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Old Airport1 Road, Rawalpindi</p>
-                </td>
-                <!--<td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                             alt=""
-                             style="width: 45px; height: 45px"
-                             class="rounded-circle" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">John Doe</p>
-                            <p class="text-muted mb-0">john.doe@gmail.com</p>
-                        </div>
-                    </div>
-                </td>-->
+                            <td class="AZ_status">
+                                @{
+                                    if (item.ISACTIVE == "Y")
 
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupBranch('24403','Rawalpind Cantt Branch','Rawalpindi','Old Airport1 Road, Rawalpindi','Active');">
-                        Edit
-                    </button>
-                </td>
-            </tr>
+                                    { <span class="badge badge-success rounded-pill d-inline">@item.ISACTIVE</span>}
+                                else
+                                { <span class="badge badge-danger rounded-pill d-inline">@item.STATUS</span>}
+                                }
+                            </td>
+                            <td class="AZ_action">
+                                <button type="button" class="btn btn-link text-danger btn-sm btn-rounded" onclick="setupAuditZone('@item.ZONECODE','@item.ZONENAME','@item.DESCRIPTION','@item.ISACTIVE','@item.ID');">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }}
         </tbody>
     </table>
 </div>
 
-<div id="setupBranchModal" class="modal" tabindex="-1" role="dialog">
+<div id="setupAZModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Branch Setup</h5>
+                <h5 class="modal-title">Audit Zone</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -188,38 +153,29 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="branchCodeModalField">Branch Code</label>
-                        <input type="text" class="form-control" id="branchCodeModalField" aria-describedby="brcode" placeholder="Branch Code">
+                        <label for="branchCodeModalField">Code</label>
+                        <input type="text" class="form-control" id="divCodeModalField" aria-describedby="brcode" placeholder="Division Code">
 
                     </div>
                     <div class="form-group">
-                        <label for="branchNameModalField">Branch Name</label>
-                        <input type="text" class="form-control" id="branchNameModalField" placeholder="Branch Name">
+                        <label for="AZNameModalField">Name</label>
+                        <input type="text" class="form-control" id="AZNameModalField" placeholder="Audit Zone Name">
                     </div>
                     <div class="form-group">
-                        <label for="branchZoneModalField">Zone</label>
-                        <select id="branchZoneModalField" class="form-control">
-                            <option id="Rawalpindi" name="Rawalpindi">Rawalpindi</option>
-                            <option id="Lahore" name="Lahore">Lahore</option>
-                            <option id="Islamabad" name="Islamabad">Islamabad</option>
-                            <option id="Karachi" name="Karachi">Karachi</option>
-                        </select>
+                        <label for="AZAddressModalField">Address</label>
+                        <textarea rows="3" class="form-control" id="divAddressModalField" placeholder="Division Address" draggable="false"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="branchAddressModalField">Address</label>
-                        <textarea rows="3" class="form-control" id="branchAddressModalField" placeholder="Branch Address" draggable="false"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="branchAddressModalField">Status</label>
+                        <label for="AZAddressModalField">Status</label>
                         <div class="row col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="branchActiveModalField" value="option1" />
-                                <label class="form-check-label" for="branchActiveModalField">Active</label>
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="divActiveModalField" value="option1" />
+                                <label class="form-check-label" for="divActiveModalField">Active</label>
                             </div>
 
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="branchInactiveModalField" value="option2" />
-                                <label class="form-check-label" for="branchInactiveModalField">Inactive</label>
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="AZInactiveModalField" value="option2" />
+                                <label class="form-check-label" for="divInactiveModalField">Inactive</label>
                             </div>
                         </div>
                     </div>
@@ -228,9 +184,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button onclick="publishBranchChanges();" type="button" class="btn btn-danger">Save changes</button>
+                <button onclick="publishAuditZoneChanges();" type="button" class="btn btn-danger">Save changes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+

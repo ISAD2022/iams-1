@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Tentative Audit Plan";
+    ViewData["Title"] = "Audit Criteria";
     Layout = "_Layout";
 }
 
@@ -7,12 +7,11 @@
     var g_teams = [];
     var g_branches = [];
     $(document).ready(function () {
-        $('#deptSelectionBox').addClass('d-none');
-        $('.hiddenContainers').addClass('d-none');
-        $('.fieldAuditFields').addClass('d-none');
-        $('.nonFieldAuditFields').addClass('d-none');
-        $('#branchInfoArea').addClass('d-none');        
-        ShowDepartmentAuditPeriods();
+        $('#sidebar_policy').hide();
+        $('.hiddenContainers').hide();
+        $('.fieldAuditFields').hide();
+        $('.nonFieldAuditFields').hide();
+        $('#branchInfoArea').hide();
 
     });
     function getBusinessDateCount(startDate, endDate) {
@@ -35,15 +34,15 @@
     }
     function ShowDepartmentAuditPeriods() {
         if ($('#deptSelectionBox option:selected').val() == 0)
-            $('.hiddenContainers').addClass('d-none');
+            $('.hiddenContainers').hide();
         else {
-             $('.hiddenContainers').removeClass('d-none');
+            $('.hiddenContainers').show();
             if ($('#deptSelectionBox option:selected').val() == '473') {
-                 $('.fieldAuditFields').removeClass('d-none');
-                $('.nonFieldAuditFields').addClass('d-none');
+                $('.fieldAuditFields').show();
+                $('.nonFieldAuditFields').hide();
             } else {
-                $('.nonFieldAuditFields').removeClass('d-none');
-                $('.fieldAuditFields').addClass('d-none');
+                $('.nonFieldAuditFields').show();
+                $('.fieldAuditFields').hide();
             }
             $.ajax({
                 url: "/Planning/audit_periods",
@@ -87,13 +86,12 @@
     function ShowSelectedZonesBranches() {
         if ($('#auditZoneSelectionBox option:selected').val() == 0) {
             $('#branchSelectionBox').empty();
-            $('#branchInfoArea').addClass('d-none');
-            $('#branchSelectionBox').append('<option value="0" id="0">--Select Audit Branch--</option>');
+            $('#branchInfoArea').hide();
+            $('#branchSelectionBox').append('<option value="0" id="0">--Select Audit Branch--</option>')
         }
         else {
             $('#branchSelectionBox').empty();
-            $('#branchInfoArea').removeClass('d-none');
-            $('#branchSelectionBox').append('<option value="0" id="0">--Select Audit Branch--</option>')
+            $('#branchInfoArea').hide();
             $.ajax({
                 url: "/Planning/zone_branches",
                 type: "POST",
@@ -103,6 +101,10 @@
                 cache: false,
                 success: function (data) {
                     g_branches = data;
+                    $('#branchSelectionBox').empty();
+                    $('#branchInfoArea').hide();
+                    $('#branchSelectionBox').append('<option value="0" id="0">--Select Audit Branch--</option>')
+                    console.log(data);
                     $.each(data, function (index, branch) {
                         $('#branchSelectionBox').append('<option value="' + branch.id + '" id="' + branch.id + '">' + branch.description + '</option>')
                     });
@@ -137,21 +139,16 @@
                 },
                 dataType: "json",
             });
-            getSubEntities();
         }
     }
     function ShowBranchInfoBox() {
-        if ($('#branchSelectionBox option:selected').val() == 0) {
-            $('#branchInfoArea').addClass('d-none');
-        } else {
-            $('#branchInfoArea').removeClass('d-none');}
+        $('#branchInfoArea').show();
     }
     function previewAuditPlan() {
         $('#previewAuditPlan').modal('show');
         $('#auditorDept').text($('#deptSelectionBox option:selected').text());
         $('#auditorPlan').text($('#periodSelectionBox option:selected').text());
         $('#descModal_field').html($('#descriptionAuditPlanField').val());
-        $('#riskLevelModal_field').html($('#riskSelectionBox option:selected').text());
         if ($('#deptSelectionBox option:selected').val() == '473') {
             $('#divzone_field').text($('#auditZoneSelectionBox option:selected').text());
             $('#deptBranch_field').text($('#branchSelectionBox option:selected').text());
@@ -185,10 +182,7 @@
         $('#teamMembers_field').html(teamMembersFields);
 
     }
-    function publishNewAuditPlanChanges() {
-
-        alert("Under Construction");
-        return false;
+    function publishNewAuditPlanChanges(){
         var periodId = $('#periodSelectionBox option:selected').val();
         var stDate = $('#executionPeriodFromField').val();
         var edDate = $('#executionPeriodToField').val();
@@ -236,56 +230,29 @@
             dataType: "json",
         });
     }
-    function getSubEntities() {
-        if ($('#divSelectionBox option:selected').val() != 0) {
-            $('#entitySelectionBox').empty();
-            $('#entitySelectionBox').append('<option value="0" id="0" selected="selected">--Select Sub Entity--</option>');
-            $.ajax({
-                url: "/Setup/get_sub_entities",
-                type: "POST",
-                data: {
-                    'div_id': $('#divSelectionBox option:selected').val(),
-                    'dept_id': $('#divDeptSelectionBox option:selected').val(),
-                },
-                cache: false,
-                success: function (data) {
-                  $.each(data, function (index, ent) {
-                      $('#entitySelectionBox').append('<option value="'+ent.id+'" id="'+ent.id+'" >'+ent.name+'</option>');
-                    });
-
-                },
-                dataType: "json",
-            });
-           
-        } else
-        {
-            $('#entitySelectionBox').empty();
-            $('#entitySelectionBox').append('<option value="0" id="0" selected="selected">--Select Sub Entity--</option>');
-        }
-        
-
-    }
 </script>
 <div class="row w-100">
     <div class="col-md-8">
-        <h3 style="color: #45c545;">Create Audit Plan</h3>
-       <select id="deptSelectionBox" onchange="ShowDepartmentAuditPeriods();" class="form-select form-control">
-           @{
+        <h3 style="color: #45c545;">Create Engagement Plan</h3>
+        <h5>Select Department</h5>
+        <select id="deptSelectionBox" onchange="ShowDepartmentAuditPeriods();" class="form-select form-control">
+            <option value="0" selected>Select Your Department</option>
+            @{
                 if (ViewData["AuditDepartments"] != null)
                 {
                     foreach (var item in (dynamic)(ViewData["AuditDepartments"]))
                     {
-                        <option selected="selected" value="@item.CODE" id="@item.CODE">@item.NAME</option>
+                        <option value="@item.CODE" id="@item.CODE">@item.NAME</option>
                     }
                 }
             }
 
         </select>
-        <div class="hiddenContainers d-none mt-3">
+        <div class="hiddenContainers mt-3">
             <h5>Select Audit Period</h5>
             <select id="periodSelectionBox" class="form-select form-control">
             </select>
-            <div class="row fieldAuditFields mt-3 d-none">
+            <div class="row fieldAuditFields mt-3">
                 <div class="col-md-6">
                     <h5>Select Audit Zone</h5>
                     <select id="auditZoneSelectionBox" onchange="ShowSelectedZonesBranches();" class="form-select form-control" aria-label="Default select example">
@@ -305,7 +272,6 @@
                 <div class="col-md-6">
                     <h5>Select Audit Branch</h5>
                     <select id="branchSelectionBox" onchange="ShowBranchInfoBox();" class="form-select form-control" aria-label="Default select example">
-                        <option value="0" id="0">--Select Audit Branch--</option>
                     </select>
                 </div>
             </div>
@@ -319,7 +285,7 @@
                             {
                                 foreach (var item in (dynamic)(ViewData["DivisionsList"]))
                                 {
-                                    <option value="@item.DIVISIONID" id="@item.DIVISIONID">@item.NAME</option>
+                                    <option value="@item.CODE" id="@item.CODE">@item.NAME</option>
                                 }
                             }
                         }
@@ -328,38 +294,34 @@
                 </div>
                 <div class="col-md-6">
                     <h5>Select Audit Department</h5>
-                    <select id="divDeptSelectionBox" onchange="getSubEntities();" class="form-select form-control" aria-label="Default select example">
-                        <option value="0" id="0">--Select Audit Department--</option>
+                    <select id="divDeptSelectionBox" class="form-select form-control" aria-label="Default select example">
                     </select>
                 </div>
             </div>
             <div class="row mt-3 w-100">
-                <div class="col-md-12"><h5>Entities</h5></div>
+                <div class="col-md-12"><h5>Description</h5></div>
                 <div class="col-md-12">
-                    <select id="entitySelectionBox" class="form-select form-control" aria-label="Default select example">
-                        <option value="0" id="0" selected>--Select Sub Entity--</option>
-                       
-                    </select>
+                   <input id="descriptionAuditPlanField" class="form-control" type="text" />
+                </div>
+               </div>
+            <div class="row mt-3 w-100">
+                <div class="col-md-12"><h5>Execution Period</h5></div>
+                <div class="col-md-6">
+                    Start Date:<input id="executionPeriodFromField" class="form-control" type="date" />
+                </div>
+                <div class="col-md-6">
+                    End Date:<input id="executionPeriodToField" class="form-control" type="date" />
                 </div>
             </div>
             <div class="row mt-3 w-100">
-                <div class="col-md-12"><h5>No. of Days</h5></div>
-                <div class="col-md-12">
-                    <input id="noofdaysAuditPlanField" class="form-control" type="number" />
+                <div class="col-md-12"><h5>Operational/Audit Period</h5></div>
+                <div class="col-md-6">
+                    Start Date:<input id="auditPeriodFromField" class="form-control" type="date" />
+                </div>
+                <div class="col-md-6">
+                    End Date:<input id="auditPeriodToField" class="form-control" type="date" />
                 </div>
             </div>
-            <div class="row mt-3 w-100">
-                <div class="col-md-12"><h5>Risk Level</h5></div>
-                <div class="col-md-12">
-                    <select id="riskSelectionBox" class="form-select form-control" aria-label="Default select example">
-                        <option value="0" id="0">--Select Risk Level--</option>
-                        <option value="1" id="1">Low</option>
-                        <option value="2" id="2">Medium</option>
-                        <option value="3" id="3">High</option>
-                    </select>
-                </div>
-            </div>
-
             <div class="row mt-3 w-100">
                 <div class="col-md-12">
                     <h5>Select Audit Team</h5>
@@ -369,11 +331,28 @@
                     </select>
                 </div>
             </div>
+            <div class="row mt-3 w-100">
+                <div class="col-md-12">
+                    <h5>Remarks/Instructions for Auditors</h5>
+                </div>
+                <div class="col-md-12">
+                    <textarea id="remarksAdditionalInfoField" rows="4" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="row mt-3 w-100">
+                <div class="col-md-4">
+                    <h5>Is Traveling Required</h5>
+                </div>
+                <div class="col-md-8">
+                    <input id="isTravelingRequiredField" type="checkbox" style="font-size:20px;" />
+                </div>
+            </div>
+
 
         </div>
     </div>
     <div class="col-md-4">
-        <div id="branchInfoArea" class="mt-3 col-md-12 d-none">
+        <div id="branchInfoArea" class="mt-3 col-md-12">
             <h5>Branch Information</h5>
             <table class="table table-bordered table mb-0 mt-3 bg-white table-hover table-striped">
 
@@ -452,18 +431,48 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
-                            <label><b>Entities</b></label>
+                            <label><b>Description</b></label>
                         </div>
                         <div class="col-md-6">
                             <label id="descModal_field"></label>
                         </div>
                     </div>
                     <div class="form-group row">
+                        <h4 class="col-md-12">Execution Period</h4>
+                    </div>
+                    <div class="form-group row">
                         <div class="col-md-6">
-                            <label><b>Risk Level</b></label>
+                            <label><b>From</b></label>
                         </div>
                         <div class="col-md-6">
-                            <label id="riskLevelModal_field"></label>
+                            <label id="exeFrom_field"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label><b>To</b></label>
+                        </div>
+                        <div class="col-md-6">
+                            <label id="exeTo_field"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <h4 class="col-md-12">Operational/Audit Period</h4>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label><b>From</b></label>
+                        </div>
+                        <div class="col-md-6">
+                            <label id="operationalFrom_field"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label><b>To</b></label>
+                        </div>
+                        <div class="col-md-6">
+                            <label id="operationalTo_field"></label>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -485,6 +494,23 @@
                             <label id="teamMembers_field"></label>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label><b>Is Traveling Required </b></label>
+                        </div>
+                        <div class="col-md-6">
+                            <label id="travelingReq_field"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label><b>Remarks/Instructions for Auditors</b></label>
+                        </div>
+                        <div class="col-md-12">
+                            <label id="remarksAddtn_field"></label>
+                        </div>
+                    </div>
+
 
                 </form>
             </div>
