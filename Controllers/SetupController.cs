@@ -102,7 +102,7 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            ViewData["DivisionList"] = dBConnection.GetDivisions();
+            ViewData["DivisionList"] = dBConnection.GetDivisions(false);
             ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
             return View();
         }
