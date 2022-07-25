@@ -313,7 +313,6 @@ namespace IAMS
             return AZList;
         }
 
-
         public List<BranchModel> GetBranches(int zone_code=0)
         {
             var con = this.DatabaseConnection();
