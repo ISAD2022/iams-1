@@ -109,6 +109,11 @@ namespace IAMS.Controllers
             return dBConnection.GetAllMenuPages(MENU_ID);
         }
         [HttpPost]
+        public List<MenuPagesModel> assigned_menu_pages(int GROUP_ID, int MENU_ID)
+        {
+            return dBConnection.GetAssignedMenuPages(GROUP_ID,MENU_ID);
+        }
+        [HttpPost]
         public GroupMenuItemMapping add_group_item_assignment(GroupMenuItemMapping gItemMap)
         {
             if (gItemMap.MENU_ITEM_IDs!=null && gItemMap.MENU_ITEM_IDs.Count > 0)

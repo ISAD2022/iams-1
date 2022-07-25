@@ -198,24 +198,46 @@ namespace IAMS
             con.Close();
             return modelList;
         }
+        public List<MenuPagesModel> GetAssignedMenuPages(int groupId,int menuId)
+        {
+            var con = this.DatabaseConnection();
+
+            List<MenuPagesModel> modelList = new List<MenuPagesModel>();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "Select * FROM T_MENU_PAGES mp inner join t_menu_pages_groupmap mpg on mp.Id=mpg.page_id WHERE mp.Status='A' and mpg.GROUP_ID= "+groupId+" and mp.MENU_ID = "+menuId+"  order by mp.PAGE_ORDER asc";
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    MenuPagesModel menuPage = new MenuPagesModel();
+                    menuPage.Id = Convert.ToInt32(rdr["ID"]);
+                    menuPage.Menu_Id = Convert.ToInt32(rdr["MENU_ID"]);
+                    menuPage.Page_Name = rdr["PAGE_NAME"].ToString();
+                    menuPage.Page_Path = rdr["PAGE_PATH"].ToString();
+                    menuPage.Page_Order = Convert.ToInt32(rdr["PAGE_ORDER"]);
+                    menuPage.Status = rdr["STATUS"].ToString();
+                    modelList.Add(menuPage);
+                }
+            }
+            con.Close();
+            return modelList;
+        }
         public List<GroupModel> GetGroups()
         {
             var con = this.DatabaseConnection();
             List<GroupModel> groupList = new List<GroupModel>();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "select g.* from  t_groups g WHERE g.ISACTIVE='Y' ORDER BY g.GROUP_ID";
+                cmd.CommandText = "select g.* from  t_groups g WHERE g.STATUS='Y' ORDER BY g.GROUP_ID";
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
                     GroupModel grp = new GroupModel();
                     grp.GROUP_ID = Convert.ToInt32(rdr["GROUP_ID"]);
-                    grp.APP_ID = Convert.ToInt32(rdr["APP_ID"]);
-                    grp.GROUP_NAME = rdr["GROUP_NAME"].ToString();
-                    grp.GROUP_DESCRIPTION = rdr["GROUP_DESCRIPTION"].ToString();
-                    grp.GROUP_CODE = Convert.ToInt32(rdr["GROUP_CODE"]);
-                    grp.ISACTIVE = rdr["ISACTIVE"].ToString();
-                    grp.RIGHTS = rdr["RIGHTS"].ToString();
+                    grp.GROUP_NAME = rdr["NAME"].ToString();
+                    grp.GROUP_DESCRIPTION = rdr["DESCRIPTION"].ToString();
+                    grp.GROUP_CODE = Convert.ToInt32(rdr["GROUP_ID"]);
+                    grp.ISACTIVE = rdr["STATUS"].ToString();
                     groupList.Add(grp);
                 }
             }

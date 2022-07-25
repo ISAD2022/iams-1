@@ -29,8 +29,13 @@ namespace IAMS.Controllers
         public IActionResult audit_period()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
-            ViewData["AuditDepartments"] = dBConnection.GetDepartments(354);
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            SessionHandler sessionHandler = new SessionHandler();
+            bool sessionCheck = true;
+            var loggedInUser = sessionHandler.GetSessionUser();
+            if (loggedInUser.UserRoleID == 1)
+                sessionCheck = false ;
+            ViewData["AuditDepartments"] = dBConnection.GetDepartments(354, sessionCheck);
             return View();
         }
         [HttpGet]
@@ -88,7 +93,12 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            ViewData["AuditDepartments"] = dBConnection.GetDepartments(354);
+            SessionHandler sessionHandler = new SessionHandler();
+            bool sessionCheck = true;
+            var loggedInUser = sessionHandler.GetSessionUser();
+            if (loggedInUser.UserRoleID == 1)
+                sessionCheck = false;
+            ViewData["AuditDepartments"] = dBConnection.GetDepartments(354, sessionCheck);
             return View();
         }
         public IActionResult team_members()
