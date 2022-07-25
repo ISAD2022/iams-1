@@ -55,6 +55,13 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["GroupsList"] = dBConnection.GetGroups();
+            return View();
+        }
+        public IActionResult group_role_assignment()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["GroupList"] = dBConnection.GetGroups();
             ViewData["MenuList"] = dBConnection.GetAllTopMenus();
             ViewData["MenuPagesList"] = dBConnection.GetAllMenuPages();

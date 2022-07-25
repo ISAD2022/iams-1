@@ -14,8 +14,4 @@
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.61" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\AdministrationPanel\" />
-  </ItemGroup>
-
 </Project>
