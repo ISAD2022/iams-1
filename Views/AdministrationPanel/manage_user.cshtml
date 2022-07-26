@@ -1,10 +1,8 @@
 ﻿@{ ViewData["Title"] = "Manage Users";
-                Layout = "_Layout"; }
+    Layout = "_Layout"; }
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var g_deptId = 0;
-        $('#sidebar_policy').hide();
         $("#searchTableRecord").on("keyup", function () {
             var value = $(this).val().toLowerCase();
             $("#listOfDepartment tbody tr").filter(function () {
@@ -12,174 +10,188 @@
             });
         });
     });
-
-    function newDeptSetup() {
-        g_deptId = 0;
-        $('#setupDeptModal').modal('show');
-        $('#deptCodeModalField').val('');
-        $('#deptNameModalField').val('');
-        $('#deptdivNameModalField').val('');
-    }
-
-    function setupDepartment(code, name, div_name, status, id, div_id) {
-        g_deptId = id;
-        $('#deptCodeModalField').val(code);
-        $('#deptNameModalField').val(name);
-
-        $('#deptdivNameModalField').val(div_id);
-        if (status == "Active")
-            $('#deptActiveModalField').click();
-        else if (status == "InActive")
-            $('#deptInactiveModalField').click();
-
-        $('#setupDeptModal').modal('show');
-    }
-
-    function publishDepartmentChanges() {
-
-        var code = $('#deptCodeModalField').val();
-        var name = $('#deptNameModalField').val();
-        var div_id = $('#deptdivNameModalField').val();
-        var div_name = $('#deptdivNameModalField option:selected').text();
-        var status;
-        var badge;
-        if ($('#deptActiveModalField').is(':checked')) {
-            status = 'Active';
-            badge = 'badge-success ';
+    function ShowSelectedZonesBranches() {
+        if ($('#zoneSearchField option:selected').val() == 0) {
+            $('#brSearchField').empty();
+            $('#brSearchField').append('<option value="0" id="0">--Select Branch--</option>');
         }
         else {
-            status = 'InActive';
-            badge = 'badge-danger ';
-        }
-        if (g_deptId == 0)
-            var row = "<tr id=\"dept_" + g_deptId + "\"><td class=\"dept_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"dept_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"dept_div\"><p class=\"fw-normal mb-1\">" + div_name + "</p></td><td class=\"dept_status\"><span class=\"badge " + badge + " rounded-pill d-inline\">" + status + "</span></td><td class=\"dept_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDepartment('" + code + "','" + name + "','" + div_name + "','" + status + "','" + g_deptId + "','" + div_id + "');\">Edit</button></td></tr>";
-        else
-            $('#dept_' + g_deptId).html("<td class=\"dept_code\"><p class=\"fw-normal mb-1\">" + code + "</p></td><td class=\"dept_name\"><p class=\"fw-normal mb-1\">" + name + "</p></td ><td class=\"dept_div\"><p class=\"fw-normal mb-1\">" + div_name + "</p></td><td class=\"dept_status\"><span class=\"badge " + badge + " rounded-pill d-inline\">" + status + "</span></td><td class=\"dept_action\"><button type=\"button\" class=\"btn btn-link text-danger btn-sm btn-rounded\" onclick=\"setupDepartment('" + code + "','" + name + "','" + div_name + "','" + status + "','" + g_deptId + "','" + div_id + "');\">Edit</button></td>");
-        $('#listOfDepartment tbody').append(row);
-        $('#setupDeptModal').modal('hide');
-        $.ajax({
-            url: "/Setup/department_add",
-            type: "POST",
-            data: {
-                'id': g_deptId,
-                'code': code,
-                'name': name,
-                'div_id': div_id,
-                'status': status
-            },
-            cache: false,
-            success: function (data) {
-                console.log(data);
-                window.location = window.location.pathname;
+            $('#brSearchField').empty();
+            $('#brSearchField').append('<option value="0" id="0">--Select Branch--</option>')
+            $.ajax({
+                url: "/Planning/zone_branches",
+                type: "POST",
+                data: {
+                    'zone_code': $('#zoneSearchField option:selected').val()
+                },
+                cache: false,
+                success: function (data) {
+                    g_branches = data;
+                    $.each(data, function (index, branch) {
+                        $('#brSearchField').append('<option value="' + branch.id + '" id="' + branch.id + '">' + branch.description + '</option>')
+                    });
 
-            },
-            dataType: "json",
-        });
+                },
+                dataType: "json",
+            });
+        }
     }
+    function ShowSelectedDivisionDepartments() {
+        if ($('#divSearchField option:selected').val() == 0) {
+            $('#deptSearchField').empty();
+            $('#deptSearchField').append('<option value="0" id="0">--Select Audit Department--</option>')
+        }
+        else {
+            $('#deptSearchField').empty();
+            $('#deptSearchField').append('<option value="0" id="0">--Select Audit Department--</option>')
+
+            $.ajax({
+                url: "/Planning/div_departments",
+                type: "POST",
+                data: {
+                    'div_code': $('#divSearchField option:selected').val()
+                },
+                cache: false,
+                success: function (data) {
+                    
+                   $.each(data, function (index, dept) {
+                        $('#deptSearchField').append('<option value="' + dept.id + '" id="' + dept.id + '">' + dept.name + '</option>')
+                    });
+
+                },
+                dataType: "json",
+            });
+            getSubEntities();
+        }
+    }
+
 </script>
 
 <div class="row col-md-12 mt-3">
     <h3>Manage Users</h3>
 </div>
-<div class="row col-md-10">
-    <button class="btn-primary align-right" style="float:right;">Save</button>
-</div>
+
 <div class="row col-md-12 mt-1">
-    <div class="row col-md-2 mt-1">
+    <div class="col-md-2">
         <label>P.P.No.</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="P.P.Number" aria-label="P.P.Number" aria-describedby="basic-addon2">
-        </div>
+    <div class="col-md-4">
+        <input id="ppnoSearchField" type="text" class="form-control" placeholder="P.P.Number" aria-label="P.P.Number" aria-describedby="basic-addon2">
     </div>
-    <div class="row col-md-2 mt-1">
-        <label class="ml-4">login Name</label>
+    <div class="col-md-2">
+        <label>login Name</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <input class="form-select form-control" type="text" />
+    <div class="col-md-4">
+        <input id="loginSearchField" class="form-control" type="text" />
     </div>
 </div>
 <div class="row col-md-12 mt-1">
-    <div class="row col-md-2 mt-1">
+    <div class="col-md-2">
         <label>Division</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <select id="divSelectionBox" class="form-select form-control" aria-label="Default select example">
-            <option value="0" id="0">--Select Division--</option>
+    <div class="col-md-4">
+        <select id="divSearchField" onchange="ShowSelectedDivisionDepartments();" class="form-control form-select">
+            <option id="0" value="0" selected="selected">--Select Division--</option>
+            @{
+                if (ViewData["DivisionList"] != null)
+                {
+                    foreach (var item in (dynamic)(ViewData["DivisionList"]))
+                    {
+                        <option value="@item.DIVISIONID" id="@item.DIVISIONID">@item.NAME</option>
+                    }
+                }
+            }
         </select>
     </div>
-    <div class="row col-md-2 mt-1">
-        <label class="ml-4">Department</label>
+    <div class="col-md-2">
+        <label>Department</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <select id="DeptSelectionBox" class="form-select form-control" aria-label="Default select example">
-            <option value="0" id="0">--Select Department--</option>
+    <div class="col-md-4">
+        <select id="deptSearchField" class="form-control form-select">
+            <option id="0" value="0" selected="selected">--Select Department--</option>
         </select>
     </div>
 </div>
 <div class="row col-md-12 mt-1">
-    <div class="row col-md-2 mt-1">
+    <div class="col-md-2">
         <label>Zone</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <select id="divSelectionBox" class="form-select form-control" aria-label="Default select example">
-            <option value="0" id="0">--Select Zone--</option>
+    <div class="col-md-4">
+        <select id="zoneSearchField" onchange="ShowSelectedZonesBranches();" class="form-control form-select">
+            <option id="0" value="0" selected="selected">--Select Zone--</option>
+            @{
+                if (ViewData["ZoneList"] != null)
+                {
+                    foreach (var item in (dynamic)(ViewData["ZoneList"]))
+                    {
+                        <option value="@item.ZONECODE" id="@item.ZONECODE">@item.ZONENAME</option>
+                    }
+                }
+            }
         </select>
     </div>
-    <div class="row col-md-2 mt-1">
-        <label class="ml-4">Branches</label>
+    <div class="col-md-2">
+        <label>Branches</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <select id="DeptSelectionBox" class="form-select form-control" aria-label="Default select example">
-            <option value="0" id="0">--Select Branch--</option>
+    <div class="col-md-4">
+        <select id="brSearchField" class="form-control form-select">
+            <option id="0" value="0" selected="selected">--Select Branch--</option>
         </select>
     </div>
 </div>
+
 <div class="row col-md-12 mt-1">
-    <div class="row col-md-2 mt-1">
+    <div class="col-md-2">
         <label>Password</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <input class="form-select form-control" type="password" />
+    <div class="col-md-4">
+        <input id="passSearchField" type="password" class="form-control"/>
     </div>
-    <div class="row col-md-2 mt-1">
-        <label class="ml-4">Confirm Password</label>
+    <div class="col-md-2">
+        <label>Confirm Password</label>
     </div>
-    <div class="row col-md-4 mt-1">
-        <input class="form-select form-control" type="password" />
+    <div class="col-md-4">
+        <input id="conPassSearchField" class="form-control" type="password" />
     </div>
 </div>
 <div class="row col-md-12 mt-1">
-    <div class="row col-md-2 mt-1">
+    <div class="col-md-2">
         <label>Email</label>
     </div>
-    <div class="row col-md-10 mt-1">
-        <input class="form-select form-control" type="email" />
+    <div class="col-md-10">
+        <input id="emailSearchField" class="form-control" type="text" />
     </div>
 </div>
-<div>
-    <div class="row col-md-12 mt-1">
-        <div class="row col-md-2 mt-1">
-            <label>Group/Role</label>
-        </div>
-        <div class="row col-md-10 mt-1">
-            <select id="DeptSelectionBox" class="form-select form-control" aria-label="Default select example">
-                <option value="0" id="0">--Select Group/Role--</option>
-            </select>
-        </div>
+<div class="row col-md-12 mt-1">
+    <div class="col-md-2">
+        <label>Group/Role</label>
+    </div>
+    <div class="col-md-10">
+        <select id="roleSearchField" class="form-control form-select">
+            <option id="0" value="0" selected="selected">--Select Group--</option>
+            @{
+                if (ViewData["GroupList"] != null)
+                {
+                    foreach (var item in (dynamic)(ViewData["GroupList"]))
+                    {
+                        <option value="@item.GROUP_CODE" id="@item.GROUP_CODE">@item.GROUP_NAME</option>
+                    }
+                }
+            }
+        </select>
     </div>
 </div>
-<div class="row col-md-12 mt-3">
-    <div class="row col-md-2 mt-3">
+<div class="row col-md-12 mt-1">
+    <div class="col-md-2">
         <label>Is Active</label>
     </div>
-    <div class="row col-md-2 mt-3">
-        <input type="checkbox" />
+    <div class="col-md-10">
+        <input id="isActiveSearchField" type="checkbox" />
     </div>
-    <div class="row col-md-4 mt-3">
-        <button class="btn-primary align-right" style="float:left;">Save</button>
-    </div>
+</div>
+<div class="row col-md-12 mt-1">
+     <button class="btn btn-danger col-md-2" style="margin-left:auto;">Find</button>
+    
 </div>
 <div class="mt-1">
     <table class="table table-bordered mb-0 mt-3 bg-white table-hover table-striped" id="Manage User">

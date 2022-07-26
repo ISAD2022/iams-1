@@ -33,6 +33,14 @@ namespace IAMS.Controllers
 
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["GroupList"] = dBConnection.GetGroups();
+            SessionHandler sessionHandler = new SessionHandler();
+            bool sessionCheck = true;
+            var loggedInUser = sessionHandler.GetSessionUser();
+            if (loggedInUser.UserRoleID == 1)
+                sessionCheck = false;
+            ViewData["DivisionList"] = dBConnection.GetDivisions(sessionCheck);
+            ViewData["ZoneList"] = dBConnection.GetZones();
             return View();
         }
         public IActionResult audit_observation_text()

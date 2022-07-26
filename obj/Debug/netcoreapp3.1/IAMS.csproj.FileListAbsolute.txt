@@ -41,7 +41,6 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\net
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\System.Windows.Extensions.dll
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.csproj.AssemblyReference.cache
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.GeneratedMSBuildEditorConfig.editorconfig
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.AssemblyInfoInputs.cache
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.AssemblyInfo.cs
@@ -59,6 +58,7 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Administ
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\audit_template.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\groups.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\group_role_assignment.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\manage_user.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\menu_assignment.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\observation_status.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\pages_management.cshtml.g.cs
@@ -147,4 +147,3 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.csproj.CopyComp
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.pdb
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.genruntimeconfig.cache
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\AdministrationPanel\manage_user.cshtml.g.cs
