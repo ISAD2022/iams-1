@@ -92,6 +92,12 @@
             dataType: "json",
         });
     }
+    function refferedBackProcTransaction() {
+        $('#commentsBox').modal('show');
+    }
+    function refferedBackProcTransaction() {
+        $('#commentsBox').modal('show');
+    }
 </script>
 
 <div class="col-md-12" style="margin-top:20px;">
@@ -213,9 +219,36 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button onclick="refferedBackProcTransaction();" type="button" class="btn btn-secondary">Refer Back</button>
-                <button onclick="recommendProcTransaction();" type="button" class="btn btn-danger">Recommend</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button onclick="refferedBackProcTransaction();" type="button" class="btn btn-danger">Refer Back</button>
+                <button onclick="recommendProcTransaction();" type="button" class="btn btn-success">Recommend</button>
 
+            </div>
+        </div>
+    </div>
+</div>
+<div id="commentsBox" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Comments</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="commentAreaInCommentsBox">Comments</label>
+                        <textarea class="form-control" rows="4" id="commentAreaInCommentsBox" placeholder="Enter Comments here.."></textarea>
+                        
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button onclick="submitFinalChangesFromRecommender();" type="button" class="btn btn-danger">Submit</button>
             </div>
         </div>
     </div>
