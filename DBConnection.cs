@@ -234,7 +234,7 @@ namespace IAMS
                 {
                     GroupModel grp = new GroupModel();
                     grp.GROUP_ID = Convert.ToInt32(rdr["GROUP_ID"]);
-                    grp.GROUP_NAME = rdr["NAME"].ToString();
+                    grp.GROUP_NAME = rdr["GROUP_NAME"].ToString();
                     grp.GROUP_DESCRIPTION = rdr["DESCRIPTION"].ToString();
                     grp.GROUP_CODE = Convert.ToInt32(rdr["GROUP_ID"]);
                     grp.ISACTIVE = rdr["STATUS"].ToString();
@@ -243,6 +243,20 @@ namespace IAMS
             }
             con.Close();
             return groupList;
+        }
+        public GroupModel AddGroup(GroupModel gm)
+        {
+            var con = this.DatabaseConnection();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                if (gm.GROUP_ID == 0)
+                    cmd.CommandText = "INSERT INTO t_groups g (g.ROLE_ID, g.GROUP_ID, g.DESCRIPTION, g.GROUP_NAME, g.STATUS) VALUES ( (select COALESCE(max(pr.ROLE_ID)+1,1) from t_groups pr),(select COALESCE(max(pg.GROUP_ID)+1,1) from t_groups pg), '" + gm.GROUP_DESCRIPTION+ "', '" + gm.GROUP_NAME + "', '" + gm.ISACTIVE + "')";
+                else
+                    cmd.CommandText = "UPDATE T_GROUPS g SET g.GROUP_NAME = '" + gm.GROUP_NAME+"', g.DESCRIPTION='"+gm.GROUP_DESCRIPTION+"', g.STATUS='"+gm.ISACTIVE+"' WHERE g.GROUP_ID="+gm.GROUP_ID;
+                OracleDataReader rdr = cmd.ExecuteReader();
+            }
+            con.Close();
+            return gm;
         }
         public void AddGroupMenuAssignment(int role_id = 0, int menu_id = 0, string page_ids = "")
         {
@@ -259,7 +273,7 @@ namespace IAMS
                 }
                 if (!isAlreadyAdded)
                 {
-                    cmd.CommandText = "INSERT INTO T_USER_GROUP_MAP (GROUP_MAP_ID,ROLE_ID,MENU_ID,PAGE_IDS) VALUES ( (select max(p.GROUP_MAP_ID)+1 from T_USER_GROUP_MAP p)," + role_id + ", " + menu_id + ", '" + page_ids + "')";
+                    cmd.CommandText = "INSERT INTO T_USER_GROUP_MAP (GROUP_MAP_ID,ROLE_ID,MENU_ID,PAGE_IDS) VALUES ( (select COALESCE(max(p.GROUP_MAP_ID)+1,1) from T_USER_GROUP_MAP p)," + role_id + ", " + menu_id + ", '" + page_ids + "')";
                     cmd.ExecuteReader();
                 }
             }
@@ -290,7 +304,7 @@ namespace IAMS
                 }
                 if (!isAlreadyAdded)
                 {
-                    cmd.CommandText = "INSERT INTO T_MENU_PAGES_GROUPMAP (GROUPMAP_ID,GROUP_ID,PAGE_ID) VALUES ( (select max(p.GROUPMAP_ID)+1 from T_MENU_PAGES_GROUPMAP p)," + group_id + ", " + menu_item_id + " )";
+                    cmd.CommandText = "INSERT INTO T_MENU_PAGES_GROUPMAP (GROUPMAP_ID,GROUP_ID,PAGE_ID) VALUES ( (select COALESCE(max(p.GROUPMAP_ID)+1,1) from T_MENU_PAGES_GROUPMAP p)," + group_id + ", " + menu_item_id + " )";
                     cmd.ExecuteReader();
                 }
             }
@@ -936,16 +950,16 @@ namespace IAMS
                 if (procDetailId == 0)
                 {
                     if(transactionId==0)
-                    cmd.CommandText = "select * from t_r_m_process_transaction pt order by pt.id asc"; 
+                    cmd.CommandText = "select pt.*,pd.TITLE, p.P_NAME from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID=pd.ID inner join t_r_m_process p on pd.ID = p.P_ID  order by pt.id asc"; 
                     else
-                        cmd.CommandText = "select * from t_r_m_process_transaction pt WHERE pt.ID="+ transactionId + " order by pt.id asc";
+                        cmd.CommandText = "select pt.*,pd.TITLE, p.P_NAME from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID=pd.ID inner join t_r_m_process p on pd.ID = p.P_ID WHERE pt.ID=" + transactionId + " order by pt.id asc";
                 }
                 else
                 {
                     if (transactionId == 0) 
-                        cmd.CommandText = "select * from t_r_m_process_transaction pt where pt.pd_id = " + procDetailId + " order by pt.Id asc";
+                        cmd.CommandText = "select pt.*,pd.TITLE, p.P_NAME from  t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID=pd.ID inner join t_r_m_process p on pd.ID = p.P_ID where pt.pd_id = " + procDetailId + " order by pt.Id asc";
                     else
-                        cmd.CommandText = "select * from t_r_m_process_transaction pt where pt.ID="+transactionId+" pt.pd_id = " + procDetailId + " order by pt.Id asc";
+                        cmd.CommandText = "select pt.*,pd.TITLE, p.P_NAME from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID=pd.ID inner join t_r_m_process p on pd.ID = p.P_ID where pt.ID=" + transactionId+" pt.pd_id = " + procDetailId + " order by pt.Id asc";
 
                 }
                     OracleDataReader rdr = cmd.ExecuteReader();
@@ -965,10 +979,51 @@ namespace IAMS
                         if (rdr["RISK_MAX_NUMBER"].ToString() != null && rdr["RISK_MAX_NUMBER"].ToString() != "")
                             pTran.RISK_MAX_NUMBER = Convert.ToInt32(rdr["RISK_MAX_NUMBER"]);
                         pTran.ACTION = rdr["ACTION"].ToString();
-                        pTran.RISK_WEIGHTAGE = rdr["RISK_WEIGHTAGE"].ToString();
-                        riskTransList.Add(pTran);
+                    pTran.RISK_WEIGHTAGE = Convert.ToInt32(rdr["RISK_WEIGHTAGE"]);
+                    pTran.SUB_PROCESS_NAME = rdr["TITLE"].ToString();
+                    pTran.PROCESS_NAME = rdr["P_NAME"].ToString();
+                    riskTransList.Add(pTran);
                     }
                 }
+            con.Close();
+            return riskTransList;
+        }
+        public List<RiskProcessTransactions> GetRiskProcessTransactionsWithStatus(int statusId)
+        {
+            var con = this.DatabaseConnection();
+            List<RiskProcessTransactions> riskTransList = new List<RiskProcessTransactions>();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                if (statusId == 0)
+                cmd.CommandText = "select pt.*, pd.TITLE, p.P_NAME, s.status from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID = pd.ID inner join t_r_m_process p on pd.ID = p.P_ID inner join t_r_m_process_transaction_status_mapping sm on pt.id = sm.T_ID inner join t_r_m_process_transaction_status s on s.ID = sm.STATUS_ID order by pt.id asc";
+                else
+                    cmd.CommandText = "select pt.*, pd.TITLE, p.P_NAME, s.status from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID = pd.ID inner join t_r_m_process p on pd.ID = p.P_ID inner join t_r_m_process_transaction_status_mapping sm on pt.id = sm.T_ID inner join t_r_m_process_transaction_status s on s.ID = sm.STATUS_ID and s.ID=" + statusId + " order by pt.id asc";
+
+
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    RiskProcessTransactions pTran = new RiskProcessTransactions();
+                    pTran.ID = Convert.ToInt32(rdr["ID"]);
+                    pTran.PD_ID = Convert.ToInt32(rdr["PD_ID"]);
+                    if (rdr["DIV_ID"].ToString() != null && rdr["DIV_ID"].ToString() != "")
+                        pTran.DIV_ID = Convert.ToInt32(rdr["DIV_ID"]);
+                    if (rdr["DIV_NAME"].ToString() != null && rdr["DIV_NAME"].ToString() != "")
+                        pTran.DIV_NAME = rdr["DIV_NAME"].ToString();
+                    if (rdr["DESCRIPTION"].ToString() != null && rdr["DESCRIPTION"].ToString() != "")
+                        pTran.DESCRIPTION = rdr["DESCRIPTION"].ToString();
+                    if (rdr["CONTROL_OWNER"].ToString() != null && rdr["CONTROL_OWNER"].ToString() != "")
+                        pTran.CONTROL_OWNER = rdr["CONTROL_OWNER"].ToString();
+                    if (rdr["RISK_MAX_NUMBER"].ToString() != null && rdr["RISK_MAX_NUMBER"].ToString() != "")
+                        pTran.RISK_MAX_NUMBER = Convert.ToInt32(rdr["RISK_MAX_NUMBER"]);
+                    pTran.ACTION = rdr["ACTION"].ToString();
+                    pTran.RISK_WEIGHTAGE = Convert.ToInt32(rdr["RISK_WEIGHTAGE"]);
+                    pTran.SUB_PROCESS_NAME = rdr["TITLE"].ToString();
+                    pTran.PROCESS_NAME = rdr["P_NAME"].ToString();
+                    pTran.PROCESS_STATUS = rdr["STATUS"].ToString();
+                    riskTransList.Add(pTran);
+                }
+            }
             con.Close();
             return riskTransList;
         }
@@ -977,7 +1032,7 @@ namespace IAMS
             var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "insert into t_r_m_process p (p.P_ID,p.P_NAME,p.RISK_ID) VALUES ( (select max(pp.P_ID)+1 from t_r_m_process pp),'" + proc.P_NAME + "','"+proc.RISK_ID+"')";
+                cmd.CommandText = "insert into t_r_m_process p (p.P_ID,p.P_NAME,p.RISK_ID) VALUES ( (select COALESCE(max(pp.P_ID)+1,1) from t_r_m_process pp),'" + proc.P_NAME + "','"+proc.RISK_ID+"')";
                 OracleDataReader rdr = cmd.ExecuteReader();
             }
             con.Close();
@@ -988,7 +1043,7 @@ namespace IAMS
             var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "insert into t_r_m_process_sub p (p.ID,p.P_ID,p.TITLE,p.ACTIVE) VALUES ( (select max(pp.ID)+1 from t_r_m_process_sub pp)," + subProc.P_ID + ",'" + subProc.TITLE + "','Y')";
+                cmd.CommandText = "insert into t_r_m_process_sub p (p.ID,p.P_ID,p.TITLE,p.ACTIVE) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_sub pp)," + subProc.P_ID + ",'" + subProc.TITLE + "','Y')";
                 OracleDataReader rdr = cmd.ExecuteReader();
             }
             con.Close();
@@ -999,7 +1054,7 @@ namespace IAMS
             var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "insert into t_r_m_process_transaction p (p.ID,p.PD_ID,p.DESCRIPTION,p.CONTROL_OWNER,p.DIV_ID,p.DIV_NAME,p.ACTION,p.RISK_WEIGHTAGE,p.RISK_MAX_NUMBER) VALUES ( (select max(pp.ID)+1 from t_r_m_process_transaction pp)," + trans.PD_ID + ",'" + trans.DESCRIPTION + "','" + trans.CONTROL_OWNER + "','" + trans.DIV_ID + "','" + trans.DIV_NAME + "','" + trans.ACTION + "','" + trans.RISK_WEIGHTAGE + "','" + trans.RISK_MAX_NUMBER + "')";
+                cmd.CommandText = "insert into t_r_m_process_transaction p (p.ID,p.PD_ID,p.DESCRIPTION,p.CONTROL_OWNER,p.DIV_ID,p.DIV_NAME,p.ACTION,p.RISK_WEIGHTAGE,p.RISK_MAX_NUMBER) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction pp)," + trans.PD_ID + ",'" + trans.DESCRIPTION + "','" + trans.CONTROL_OWNER + "','" + trans.DIV_ID + "','" + trans.DIV_NAME + "','" + trans.ACTION + "','" + trans.RISK_WEIGHTAGE + "','" + trans.RISK_MAX_NUMBER + "')";
                 OracleDataReader rdr = cmd.ExecuteReader();
             }
             con.Close();

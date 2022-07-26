@@ -106,6 +106,21 @@ namespace IAMS.Controllers
             ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
             return View();
         }
+        public IActionResult process_review()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["TransactionsList"] = dBConnection.GetRiskProcessTransactionsWithStatus(1);
+            return View();
+        }
+        public IActionResult process_authorize()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["DivisionList"] = dBConnection.GetDivisions(false);
+            ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
+            return View();
+        }
         public IActionResult sub_entities()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();

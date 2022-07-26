@@ -21,21 +21,16 @@
         $('#setupGroupModal').modal('show');
         $('#groupNameModalField').val('');
         $('#groupDescModalField').val('');
-        $('#branchZoneModalField').val('');
-        $('#branchSizeModalField').val('');
-        $('#branchRiskModalField').val('');
     }
 
     function setupGroup(name, description, active, grpId) {
         g_groupId = grpId;
-        $('#groupNameModalField').val(code);
-        $('#groupDescModalField').val(name);
-        $('#branchZoneModalField').val(zoneId);
-        $('#branchSizeModalField').val(sizeId);
-        $('#branchRiskModalField').val(risk);
-        if (status == "Active")
+        $('#groupNameModalField').val(name);
+        $('#groupDescModalField').val(description);
+       
+        if (active == "Y")
             $('#groupActiveModalField').click();
-        else if (status == "InActive")
+        else 
             $('#groupInactiveModalField').click();
 
         $('#setupGroupModal').modal('show');
@@ -43,44 +38,30 @@
 
     function publishGroupChanges() {
 
-        var code = $('#groupNameModalField').val();
-        var name = $('#groupDescModalField').val();
-        var zoneId = $('#branchZoneModalField').val();
-        var zone_name = $('#branchZoneModalField option:selected').text();
-        var sizeId = $('#branchSizeModalField').val();
-        var size = $('#branchSizeModalField option:selected').text();
-        var risk = $('#branchRiskModalField').val();
+        var name = $('#groupNameModalField').val();
+        var desc = $('#groupDescModalField').val();
         var status;
         var badge;
         if ($('#groupActiveModalField').is(':checked')) {
-            status = 'Active';
+            status = 'Y';
             badge = 'badge-success ';
         }
         else {
-            status = 'InActive';
+            status = 'N';
             badge = 'badge-danger ';
         }
-        if (g_groupId == 0)
-            var row = "<tr id=\"div_" + g_groupId + " \"><td><p class=\"fw - normal mb - 1\">" + code + "</p></td><td><p class=\"fw - normal mb - 1\">" + name + "</p></td><td><p class=\"fw - normal mb - 1\">" + zone_name + "</p></td><td><p class=\"fw - normal mb - 1\">" + size + "</p></td><td><p class=\"fw - normal mb - 1\">" + risk + "</p></td><td><span class=\"badge " + badge + " rounded - pill d - inline\">" + status + "</span></td><td><button type=\"button\" class=\"btn btn - link text - danger btn - sm btn - rounded\" onclick=\"setupGroup('" + code + "', '" + name + "', '" + zone_name + "', '" + zoneId + "', '" + size + "', '" + sizeId + "', '" + risk + "', '" + status + "', '" + g_groupId + "'); \" > Edit</button></td ></tr >";
-        else
-            $('#div_' + g_groupId).html("<td><p class=\"fw - normal mb - 1\">" + code + "</p></td><td><p class=\"fw - normal mb - 1\">" + name + "</p></td><td><p class=\"fw - normal mb - 1\">" + zone_name + "</p></td><td><p class=\"fw - normal mb - 1\">" + size + "</p></td><td><p class=\"fw - normal mb - 1\">" + risk + "</p></td><td><span class=\"badge " + badge + " rounded - pill d - inline\">" + status + "</span></td><td><button type=\"button\" class=\"btn btn - link text - danger btn - sm btn - rounded\" onclick=\"setupGroup('" + code + "', '" + name + "', '" + zone_name + "', '" + zoneId + "', '" + size + "', '" + sizeId + "', '" + risk + "', '" + status + "', '" + g_groupId + "'); \" > Edit</button></td >");
-        $('#listOfGroups tbody').append(row);
-        $('#setupGroupModal').modal('hide');
         $.ajax({
-            url: "/Setup/branch_add",
+            url: "/AdministrationPanel/group_add",
             type: "POST",
             data: {
-                'BRANCHID': g_groupId,
-                'BRANCHCODE': code,
-                'BRANCHNAME': name,
-                'ZONEID': zoneId,
-                'BRANCH_SIZE_ID': sizeId,
-                'BRANCH_SIZE': size,
-                'ZONE_NAME': zone_name,
+                'GROUP_ID': g_groupId,
+                'GROUP_NAME': name,
+                'GROUP_DESCRIPTION': desc,
                 'ISACTIVE': status
             },
             cache: false,
             success: function (data) {
+                $('#setupGroupModal').modal('hide');
                 console.log(data);
                 window.location = window.location.pathname;
 

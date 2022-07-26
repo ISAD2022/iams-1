@@ -28,6 +28,13 @@ namespace IAMS.Controllers
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             return View();
         }
+        public IActionResult manage_user()
+        {
+
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            return View();
+        }
         public IActionResult audit_observation_text()
         {
 
@@ -145,7 +152,14 @@ namespace IAMS.Controllers
             }
             return gItemMap;
         }
-        
+        [HttpPost]
+        public GroupModel group_add(GroupModel grp)
+        {
+            
+          return dBConnection.AddGroup(grp);
+               
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

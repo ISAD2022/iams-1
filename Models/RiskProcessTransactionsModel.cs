@@ -12,8 +12,14 @@ namespace IAMS.Models
         public string DESCRIPTION { get; set; }
         public string CONTROL_OWNER { get; set; }
         public string ACTION { get; set; }
-        public string RISK_WEIGHTAGE { get; set; }
+        public int RISK_WEIGHTAGE { get; set; }
         public int RISK_MAX_NUMBER { get; set; }
+        [NotMapped]
+        public string SUB_PROCESS_NAME { get; set; }
+        [NotMapped]
+        public string PROCESS_NAME { get; set; }
+        [NotMapped]
+        public string PROCESS_STATUS { get; set; }
 
     }
 }
