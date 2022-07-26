@@ -110,15 +110,30 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            ViewData["TransactionsList"] = dBConnection.GetRiskProcessTransactionsWithStatus(1);
+            int[] statusIds = { 1, 4 };
+            List<RiskProcessTransactions> trList = dBConnection.GetRiskProcessTransactionsWithStatus(statusIds);
+            foreach(var item in trList)
+            {
+                RiskProcessTransactions pt = new RiskProcessTransactions();
+                pt = dBConnection.GetRiskProcessTransactionLastStatus(item);
+                item.PROCESS_COMMENTS = pt.PROCESS_COMMENTS;
+            }
+            ViewData["TransactionsList"] = trList;
             return View();
         }
         public IActionResult process_authorize()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            ViewData["DivisionList"] = dBConnection.GetDivisions(false);
-            ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
+            int[] statusIds = {3};
+            List<RiskProcessTransactions> trList = dBConnection.GetRiskProcessTransactionsWithStatus(statusIds);
+            foreach (var item in trList)
+            {
+                RiskProcessTransactions pt = new RiskProcessTransactions();
+                pt = dBConnection.GetRiskProcessTransactionLastStatus(item);
+                item.PROCESS_COMMENTS = pt.PROCESS_COMMENTS;
+            }
+            ViewData["TransactionsList"] = trList;
             return View();
         }
         public IActionResult sub_entities()
@@ -176,6 +191,24 @@ namespace IAMS.Controllers
         public RiskProcessTransactions sub_process_transaction_add(RiskProcessTransactions tran)
         {
             return dBConnection.AddRiskSubProcessTransaction(tran);
+        }
+        [HttpPost]
+        public bool recommend_process_transaction_by_reviewer(int T_ID, string COMMENTS)
+        {
+            return dBConnection.RecommendProcessTransactionByReviewer(T_ID,COMMENTS);
+        }
+        public bool reffered_back_process_transaction_by_reviewer(int T_ID, string COMMENTS)
+        {
+            return dBConnection.RefferedBackProcessTransactionByReviewer(T_ID, COMMENTS);
+        }
+        [HttpPost]
+        public bool recommend_process_transaction_by_authorizer(int T_ID, string COMMENTS)
+        {
+            return dBConnection.RecommendProcessTransactionByAuthorizer(T_ID, COMMENTS);
+        }
+        public bool reffered_back_process_transaction_by_authorizer(int T_ID, string COMMENTS)
+        {
+            return dBConnection.RefferedBackProcessTransactionByAuthorizer(T_ID, COMMENTS);
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

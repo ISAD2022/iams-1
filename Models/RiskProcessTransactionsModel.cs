@@ -20,6 +20,8 @@ namespace IAMS.Models
         public string PROCESS_NAME { get; set; }
         [NotMapped]
         public string PROCESS_STATUS { get; set; }
+        [NotMapped] 
+        public string PROCESS_COMMENTS { get; set; }
 
     }
 }

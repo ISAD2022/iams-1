@@ -17,8 +17,8 @@
 </style>
 
 <script type="text/javascript">
+    var g_trId = 0;
     $(document).ready(function () {
-        var g_groupId = 0;
         $("#searchTableRecord").on("keyup", function () {
             var value = $(this).val().toLowerCase();
             $("#listOfProcTransactions tbody tr").filter(function () {
@@ -27,15 +27,9 @@
         });
     });
 
-    function newGroupSetup() {
-        g_groupId = 0;
-        $('#recommendReferProcTransactionModal').modal('show');
-        $('#groupNameModalField').val('');
-        $('#groupDescModalField').val('');
-    }
-
+   
     function recommendReferProcTransaction(id) {
-       
+        g_trId = id;
         $('#recommendReferProcTransactionModal').modal('show');
         $.ajax({
             url: "/Setup/process_transactions",
@@ -52,51 +46,61 @@
                 $('#viewerControlModalField').val(tr.controL_OWNER);
                 $('#viewerDivModalField').val(tr.diV_NAME);
                 $('#viewerActionModalField').val(tr.action);
-                $('#viewerRiskModalField').val(tr.risK_WEIGHTAGE);
+                if (tr.risK_WEIGHTAGE==3)
+                $('#viewerRiskModalField').val('High');
+                if (tr.risK_WEIGHTAGE == 3)
+                    $('#viewerRiskModalField').val('Medium');
+                else
+                    $('#viewerRiskModalField').val('Low');
                 $('#viewerRiskMaxModalField').val(tr.risK_MAX_NUMBER);
             },
             dataType: "json",
         });
     }
-
     function recommendProcTransaction() {
-
-        var name = $('#groupNameModalField').val();
-        var desc = $('#groupDescModalField').val();
-        var status;
-        var badge;
-        if ($('#groupActiveModalField').is(':checked')) {
-            status = 'Y';
-            badge = 'badge-success ';
-        }
-        else {
-            status = 'N';
-            badge = 'badge-danger ';
-        }
+        $('#commentsBox').modal('show');
+        $('#finalCommentsButtonSave').attr('onclick', 'finalRecommendProcessTransaction()');
+       
+    }
+    function refferedBackProcTransaction() {
+        $('#commentsBox').modal('show');
+        $('#finalCommentsButtonSave').attr('onclick', 'finalRefferedBackProcessTransaction()');
+       
+    }
+    function finalRecommendProcessTransaction() {
+       
         $.ajax({
-            url: "/AdministrationPanel/group_add",
+            url: "/Setup/recommend_process_transaction_by_reviewer",
             type: "POST",
             data: {
-                'GROUP_ID': g_groupId,
-                'GROUP_NAME': name,
-                'GROUP_DESCRIPTION': desc,
-                'ISACTIVE': status
+                'T_ID': g_trId,
+                'COMMENTS': $('#commentAreaInCommentsBox').val()
             },
             cache: false,
             success: function (data) {
                 $('#recommendReferProcTransactionModal').modal('hide');
                 console.log(data);
                 window.location = window.location.pathname;
-
             },
             dataType: "json",
         });
     }
-    function refferedBackProcTransaction() {
-        $('#commentsBox').modal('show');
-    }
-    function refferedBackProcTransaction() {
-        $('#commentsBox').modal('show');
+    function finalRefferedBackProcessTransaction() {
+        $.ajax({
+            url: "/Setup/reffered_back_process_transaction_by_reviewer",
+            type: "POST",
+            data: {
+                'T_ID': g_trId,
+                'COMMENTS': $('#commentAreaInCommentsBox').val()
+            },
+            cache: false,
+            success: function (data) {
+                $('#recommendReferProcTransactionModal').modal('hide');
+                console.log(data);
+                window.location = window.location.pathname;
+            },
+            dataType: "json",
+        });
     }
 </script>
 
@@ -155,7 +159,7 @@
                                 }
                             </td>
                             <td>
-                                <p class="fw-normal mb-1">@item.PROCESS_STATUS</p>
+                                <p class="fw-normal mb-1">@item.PROCESS_COMMENTS</p>
                             </td>
                             <td>
                                 <button type="button" class="action btn btn-link text-danger btn-sm btn-rounded" onclick="recommendReferProcTransaction('@item.ID');">
@@ -248,7 +252,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button onclick="submitFinalChangesFromRecommender();" type="button" class="btn btn-danger">Submit</button>
+                <button id="finalCommentsButtonSave" type="button" class="btn btn-danger">Submit</button>
             </div>
         </div>
     </div>

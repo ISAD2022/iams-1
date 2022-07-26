@@ -988,16 +988,16 @@ namespace IAMS
             con.Close();
             return riskTransList;
         }
-        public List<RiskProcessTransactions> GetRiskProcessTransactionsWithStatus(int statusId)
+        public List<RiskProcessTransactions> GetRiskProcessTransactionsWithStatus(int[] statusId)
         {
             var con = this.DatabaseConnection();
             List<RiskProcessTransactions> riskTransList = new List<RiskProcessTransactions>();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                if (statusId == 0)
+                if (statusId.Length == 0)
                 cmd.CommandText = "select pt.*, pd.TITLE, p.P_NAME, s.status from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID = pd.ID inner join t_r_m_process p on pd.ID = p.P_ID inner join t_r_m_process_transaction_status_mapping sm on pt.id = sm.T_ID inner join t_r_m_process_transaction_status s on s.ID = sm.STATUS_ID order by pt.id asc";
                 else
-                    cmd.CommandText = "select pt.*, pd.TITLE, p.P_NAME, s.status from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID = pd.ID inner join t_r_m_process p on pd.ID = p.P_ID inner join t_r_m_process_transaction_status_mapping sm on pt.id = sm.T_ID inner join t_r_m_process_transaction_status s on s.ID = sm.STATUS_ID and s.ID=" + statusId + " order by pt.id asc";
+                    cmd.CommandText = "select pt.*, pd.TITLE, p.P_NAME, s.status from t_r_m_process_transaction pt inner join t_r_m_process_sub pd on pt.PD_ID = pd.ID inner join t_r_m_process p on pd.ID = p.P_ID inner join t_r_m_process_transaction_status_mapping sm on pt.id = sm.T_ID inner join t_r_m_process_transaction_status s on s.ID = sm.STATUS_ID and s.ID IN (" + string.Join(",", statusId) + ") order by pt.id asc";
 
 
                 OracleDataReader rdr = cmd.ExecuteReader();
@@ -1027,6 +1027,22 @@ namespace IAMS
             con.Close();
             return riskTransList;
         }
+
+        public RiskProcessTransactions GetRiskProcessTransactionLastStatus(RiskProcessTransactions tr)
+        {
+            var con = this.DatabaseConnection();
+           using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "select comments from t_r_m_process_transaction_log l where l.t_id="+ tr.ID+ " order by l.created_on desc FETCH NEXT 1 ROWS ONLY";
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    tr.PROCESS_COMMENTS = rdr["comments"].ToString();
+                }
+            }
+            con.Close();
+            return tr;
+        }
         public RiskProcessDefinition AddRiskProcess(RiskProcessDefinition proc)
         {
             var con = this.DatabaseConnection();
@@ -1052,13 +1068,75 @@ namespace IAMS
         public RiskProcessTransactions AddRiskSubProcessTransaction(RiskProcessTransactions trans)
         {
             var con = this.DatabaseConnection();
+            var loggedInUser = sessionHandler.GetSessionUser();
             using (OracleCommand cmd = con.CreateCommand())
             {
                 cmd.CommandText = "insert into t_r_m_process_transaction p (p.ID,p.PD_ID,p.DESCRIPTION,p.CONTROL_OWNER,p.DIV_ID,p.DIV_NAME,p.ACTION,p.RISK_WEIGHTAGE,p.RISK_MAX_NUMBER) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction pp)," + trans.PD_ID + ",'" + trans.DESCRIPTION + "','" + trans.CONTROL_OWNER + "','" + trans.DIV_ID + "','" + trans.DIV_NAME + "','" + trans.ACTION + "','" + trans.RISK_WEIGHTAGE + "','" + trans.RISK_MAX_NUMBER + "')";
                 OracleDataReader rdr = cmd.ExecuteReader();
+                cmd.CommandText = "insert into t_r_m_process_transaction_log p (p.ID,p.T_ID,p.STATUS_ID,p.USER_ID,p.COMMENTS) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction_log pp), (select max(tp.ID) from t_r_m_process_transaction tp) ,'1',"+ loggedInUser.ID+ ",'New Transaction Added')";
+                cmd.ExecuteReader();
+                cmd.CommandText = "insert into t_r_m_process_transaction_status_mapping p (p.ID,p.T_ID,p.STATUS_ID) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction_status_mapping pp), (select max(tp.ID) from t_r_m_process_transaction tp) ,'1')";
+                cmd.ExecuteReader();
+
             }
             con.Close();
             return trans;
+        }
+        public bool RecommendProcessTransactionByReviewer(int T_ID, string COMMENTS)
+        {
+            var con = this.DatabaseConnection();
+            var loggedInUser = sessionHandler.GetSessionUser();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = " Update t_r_m_process_transaction_status_mapping tm SET tm.STATUS_ID = 3 WHERE tm.T_ID=" + T_ID;
+                OracleDataReader rdr = cmd.ExecuteReader();
+                cmd.CommandText = "insert into t_r_m_process_transaction_log p (p.ID,p.T_ID,p.STATUS_ID,p.USER_ID,p.COMMENTS) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction_log pp), "+T_ID+" ,'3'," + loggedInUser.ID + ",'"+COMMENTS+"')";
+                cmd.ExecuteReader();
+            }
+            con.Close();
+            return true;
+        }
+        public bool RefferedBackProcessTransactionByReviewer(int T_ID, string COMMENTS)
+        {
+            var con = this.DatabaseConnection();
+            var loggedInUser = sessionHandler.GetSessionUser();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = " Update t_r_m_process_transaction_status_mapping tm SET tm.STATUS_ID = 2 WHERE tm.T_ID=" + T_ID;
+                OracleDataReader rdr = cmd.ExecuteReader();
+                cmd.CommandText = "insert into t_r_m_process_transaction_log p (p.ID,p.T_ID,p.STATUS_ID,p.USER_ID,p.COMMENTS) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction_log pp), " + T_ID + " ,'2'," + loggedInUser.ID + ",'" + COMMENTS + "')";
+                cmd.ExecuteReader();
+            }
+            con.Close();
+            return true;
+        }
+        public bool RecommendProcessTransactionByAuthorizer(int T_ID, string COMMENTS)
+        {
+            var con = this.DatabaseConnection();
+            var loggedInUser = sessionHandler.GetSessionUser();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = " Update t_r_m_process_transaction_status_mapping tm SET tm.STATUS_ID = 5 WHERE tm.T_ID=" + T_ID;
+                OracleDataReader rdr = cmd.ExecuteReader();
+                cmd.CommandText = "insert into t_r_m_process_transaction_log p (p.ID,p.T_ID,p.STATUS_ID,p.USER_ID,p.COMMENTS) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction_log pp), " + T_ID + " ,'5'," + loggedInUser.ID + ",'" + COMMENTS + "')";
+                cmd.ExecuteReader();
+            }
+            con.Close();
+            return true;
+        }
+        public bool RefferedBackProcessTransactionByAuthorizer(int T_ID, string COMMENTS)
+        {
+            var con = this.DatabaseConnection();
+            var loggedInUser = sessionHandler.GetSessionUser();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = " Update t_r_m_process_transaction_status_mapping tm SET tm.STATUS_ID = 4 WHERE tm.T_ID=" + T_ID;
+                OracleDataReader rdr = cmd.ExecuteReader();
+                cmd.CommandText = "insert into t_r_m_process_transaction_log p (p.ID,p.T_ID,p.STATUS_ID,p.USER_ID,p.COMMENTS) VALUES ( (select COALESCE(max(pp.ID)+1,1) from t_r_m_process_transaction_log pp), " + T_ID + " ,'4'," + loggedInUser.ID + ",'" + COMMENTS + "')";
+                cmd.ExecuteReader();
+            }
+            con.Close();
+            return true;
         }
     }
 }
