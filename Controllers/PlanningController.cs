@@ -14,7 +14,7 @@ namespace IAMS.Controllers
         private readonly ILogger<PlanningController> _logger;
         private readonly TopMenus tm = new TopMenus();
         private readonly DBConnection dBConnection = new DBConnection();
-
+        private readonly SessionHandler sessionHandler = new SessionHandler();
         public PlanningController(ILogger<PlanningController> logger)
         {
             _logger = logger;
@@ -30,7 +30,6 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            SessionHandler sessionHandler = new SessionHandler();
             bool sessionCheck = true;
             var loggedInUser = sessionHandler.GetSessionUser();
             if (loggedInUser.UserRoleID == 1)
@@ -93,7 +92,6 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-            SessionHandler sessionHandler = new SessionHandler();
             bool sessionCheck = true;
             var loggedInUser = sessionHandler.GetSessionUser();
             if (loggedInUser.UserRoleID == 1)
@@ -106,6 +104,19 @@ namespace IAMS.Controllers
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["AuditDepartments"] = dBConnection.GetDepartments(354);
+            var loggedInUser = sessionHandler.GetSessionUser();
+            if(loggedInUser.UserPostingAuditZone!=null && loggedInUser.UserPostingAuditZone != 0)
+                ViewData["AuditEmployees"] = dBConnection.GetAuditEmployees((int)loggedInUser.UserPostingAuditZone);
+           else if (loggedInUser.UserPostingBranch != null && loggedInUser.UserPostingBranch != 0)
+                ViewData["AuditEmployees"] = dBConnection.GetAuditEmployees((int)loggedInUser.UserPostingBranch);
+            else if (loggedInUser.UserPostingDept != null && loggedInUser.UserPostingDept != 0)
+                ViewData["AuditEmployees"] = dBConnection.GetAuditEmployees((int)loggedInUser.UserPostingDept);
+            else if (loggedInUser.UserPostingDiv != null && loggedInUser.UserPostingDiv != 0)
+                ViewData["AuditEmployees"] = dBConnection.GetAuditEmployees((int)loggedInUser.UserPostingDiv);
+            else if (loggedInUser.UserPostingZone != null && loggedInUser.UserPostingZone != 0)
+                ViewData["AuditEmployees"] = dBConnection.GetAuditEmployees((int)loggedInUser.UserPostingZone);
+
+
             return View();
         }
         [HttpPost]

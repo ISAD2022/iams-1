@@ -43,22 +43,25 @@
                     var srNo = 1;
                     var teamMembers=[];
                     $.each(data, function (index, team) {
-                        var teamLeadStr = '(M)';
-                        if (team.iS_TEAMLEAD == "Y")
-                            teamLeadStr = '(L)'
-                        if (team.id != teamId) {
-                            $('#listOfEmployeeTeam tbody').append('<tr id=teamcode_' + team.id + '><td class="searchable"><p class="fw-normal mb-1">' + srNo + '</p></td><td class="searchable"><p class="fw-normal mb-1">' + team.name + ' </p></td><td class="searchable"><p class="empName fw-normal mb-1">' + team.employeename + ' ' + teamLeadStr + ' </p></td><td><small class="text-danger deleteTeam">Edit</small></td><td><small class="text-danger deleteTeam">Delete</small></td></tr>')
-                            teamId = team.id;
-                            srNo++;
-                        } else {
+                       
+                        if (team.iS_TEAMLEAD == "Y") {
+                            $('#listOfEmployeeTeam tbody').append('<tr id=teamcode_' + team.code + '><td class="searchable"><p class="fw-normal mb-1">' + srNo + '</p></td><td class="searchable"><p class="fw-normal mb-1">' + team.name + ' </p></td><td class="searchable"><p class="empName fw-normal mb-1">' + team.employeename + ' </p></td><td class="empMembers"></td><td><small class="text-danger deleteTeam">Edit</small></td><td><small class="text-danger deleteTeam">Delete</small></td></tr>');
+                        } else
+                        {
                             teamMembers.push(team);
+                            if (team.code != teamId) {
+                                teamId = team.code;
+                                srNo++;
+                            } 
                         }
                     });
                     $.each(teamMembers, function (index, team) {
                         if (team.iS_TEAMLEAD != "Y")
-                          {
-                            prevText = $('#listOfEmployeeTeam tbody #teamcode_' + team.id + ' .empName').text();
-                            $('#listOfEmployeeTeam tbody #teamcode_' + team.id + ' .empName').text(prevText + ', ' + team.employeename + " (M)");
+                        {
+                            prevText = $('#listOfEmployeeTeam tbody #teamcode_' + team.code + ' .empMembers').html();
+                            if (prevText != '')
+                                prevText += ", ";
+                            $('#listOfEmployeeTeam tbody #teamcode_' + team.code + ' .empMembers').text(prevText +  team.employeename );
                         }
                     });
                 },
@@ -68,6 +71,9 @@
     }
     function addNewTeam() {
         $('#setupAuditTeam').modal('show');
+    }
+    function publishNewTeamChanges() {
+
     }
 </script>
 <div class="row d-none">
@@ -99,27 +105,20 @@
             <tr>
                 <th class="col-md-1">Sr No.</th>
                 <th class="col-md-3">Team Name</th>
+                <th class="col-md-3">Team Lead</th>
                 <th class="col-md-7">Team Members</th>
                 <th class="col-md-1">Edit</th>
                 <th class="col-md-1">Delete</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-            <td class="searchable"><p class="fw-normal mb-1">1</p></td>
-            <td class="searchable"><p class="fw-normal mb-1">Team A</p></td>
-            <td class="searchable"><p class="fw-normal mb-1">Ali Asif (L), Muhammad Aqib (M)</p></td>
-            <td><small class="text-danger">Edit</small></td>
-            <td><small class="text-danger deleteTeam">Delete</small></td>
-            </tr>
-
         </tbody>
     </table>
 
 </div>
 
-<div id="setupAuditTeam" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div id="setupAuditTeam" class="modal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog  modal-lg" role="document" >
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title">New Audit Team</h5>
@@ -135,24 +134,26 @@
 
                     </div>
                     <div class="form-group">
-
-                        <label class="col-md-3">Participant</label>
-                        <label for="branchNameModalField">Auditors</label>
-                        <label for="branchNameModalField">Auditors</label>
-                        <div class="row" style="padding-left:20px;">
-                            <div class="col-md-3"><input type="checkbox" /></div>
-                            <div class="col-md-6"><label>Ali Asif</label></div>
-                            <div class="col-md-3"><input type="checkbox" /></div>
-                            <div class="col-md-3"><input type="checkbox" /></div>
-                            <div class="col-md-6"><label>Muhammad Aqib</label></div>
-                            <div class="col-md-3"><input type="checkbox" /></div>
-                            <div class="col-md-3"><input type="checkbox" /></div>
-                            <div class="col-md-6"><label>Asfand Yar Javaid</label></div>
-                            <div class="col-md-3"><input type="checkbox" /></div>
-                            <div class="col-md-3"><input type="checkbox" /></div>
-                            <div class="col-md-6"><label>Arshad Javed</label></div>
-                            <div class="col-md-3"><input type="checkbox" /></div>
+                        <div class="row col-md-12">
+                            <label class="col-md-3">Participant</label>
+                            <label class="col-md-6">Auditors</label>
+                            <label class="col-md-3">Team Lead</label>
                         </div>
+                        <div class="row" style="padding-left:20px;">
+                            @{
+                                if (ViewData["AuditEmployees"] != null)
+                                {
+                                    foreach (var item in (dynamic)(ViewData["AuditEmployees"]))
+                                    {
+                                        <div class="col-md-3"><input type="checkbox" /></div>
+                                        <div class="col-md-6"><label>@item.EMPLOYEEFIRSTNAME&nbsp;@item.EMPLOYEELASTNAME</label></div>
+                                        <div class="col-md-3"><input name="isTeamLead" type="radio" /></div>
+                            
+                                    }
+                                }
+                            }
+
+                            </div>
                     </div>
                 </form>
             </div>

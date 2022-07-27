@@ -30,6 +30,26 @@ namespace IAMS.Controllers
             ViewData["BranchSizeList"] = dBConnection.GetBranchSizes();
             return View();
         }
+        public IActionResult manage_audit_zone_branches()
+        {
+
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["BranchList"] = dBConnection.GetBranches();
+            ViewData["ZoneList"] = dBConnection.GetZones();
+            ViewData["BranchSizeList"] = dBConnection.GetBranchSizes();
+            return View();
+        }
+        public IActionResult manage_inspection_unit_branches()
+        {
+
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["BranchList"] = dBConnection.GetBranches();
+            ViewData["ZoneList"] = dBConnection.GetZones();
+            ViewData["BranchSizeList"] = dBConnection.GetBranchSizes();
+            return View();
+        }
         [HttpPost]
         public BranchModel branch_add(BranchModel br)
         {
@@ -91,6 +111,21 @@ namespace IAMS.Controllers
             return dept;
         }
         public IActionResult audit_zones()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["AuditZoneList"] = dBConnection.GetAuditZones();
+            return View();
+        }
+
+        public IActionResult inspection_unit()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["AuditZoneList"] = dBConnection.GetAuditZones();
+            return View();
+        }
+        public IActionResult control_voilation()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();

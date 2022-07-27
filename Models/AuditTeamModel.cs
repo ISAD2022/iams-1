@@ -12,6 +12,8 @@ namespace IAMS.Models
         public string IS_TEAMLEAD { get; set; }
         [NotMapped]
         public string EMPLOYEENAME { get; set; }
+        [NotMapped]
+        public string PLACE_OF_POSTING { get; set; }
 
     }
 }
