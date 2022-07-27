@@ -148,7 +148,7 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.pdb
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.genruntimeconfig.cache
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.csproj.AssemblyReference.cache
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\control_voilation.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\inspection_unit.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\Manage_audit_zone_branches.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\manage_inspection_unit_branches.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\control_violation.cshtml.g.cs

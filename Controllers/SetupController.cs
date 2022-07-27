@@ -125,7 +125,7 @@ namespace IAMS.Controllers
             ViewData["AuditZoneList"] = dBConnection.GetAuditZones();
             return View();
         }
-        public IActionResult control_voilation()
+        public IActionResult control_violation()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();

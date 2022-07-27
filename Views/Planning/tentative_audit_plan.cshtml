@@ -150,15 +150,23 @@
         $('#previewAuditPlan').modal('show');
         $('#auditorDept').text($('#deptSelectionBox option:selected').text());
         $('#auditorPlan').text($('#periodSelectionBox option:selected').text());
-        $('#descModal_field').html($('#descriptionAuditPlanField').val());
+        $('#descModal_field').html($('#entitySelectionBox option:selected').text());
+        $('#daysModal_field').html($('#noofdaysAuditPlanField').val());
         $('#riskLevelModal_field').html($('#riskSelectionBox option:selected').text());
         if ($('#deptSelectionBox option:selected').val() == '473') {
             $('#divzone_field').text($('#auditZoneSelectionBox option:selected').text());
-            $('#deptBranch_field').text($('#branchSelectionBox option:selected').text());
+            if ($('#branchSelectionBox option:selected').val() != 0)
+                $('#deptBranch_field').text($('#branchSelectionBox option:selected').text());
+            else
+                $('#deptBranch_field').text('--');
 
         } else {
             $('#divzone_field').text($('#divSelectionBox option:selected').text());
-            $('#deptBranch_field').text($('#divDeptSelectionBox option:selected').text());
+            if ($('#divDeptSelectionBox option:selected').val() != 0)
+                $('#deptBranch_field').text($('#divDeptSelectionBox option:selected').text());
+            else
+                $('#deptBranch_field').text('--');
+         
 
         }        
         $('#exeFrom_field').html($('#executionPeriodFromField').val());
@@ -360,7 +368,7 @@
                 </div>
             </div>
 
-            <div class="row mt-3 w-100">
+            <div class="row mt-3 w-100 d-none">
                 <div class="col-md-12">
                     <h5>Select Audit Team</h5>
                 </div>
@@ -420,7 +428,7 @@
 
 
 <div id="previewAuditPlan" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title">Preview Audit Plan</h5>
@@ -460,24 +468,32 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
+                            <label><b>No of days</b></label>
+                        </div>
+                        <div class="col-md-6">
+                            <label id="daysModal_field"></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
                             <label><b>Risk Level</b></label>
                         </div>
                         <div class="col-md-6">
                             <label id="riskLevelModal_field"></label>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row d-none">
                         <h4 class="col-md-12">Audit Team</h4>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row d-none">
                         <div class="col-md-6">
                             <label><b>Team Name</b></label>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 ">
                             <label id="teamName_field"></label>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row d-none">
                         <div class="col-md-6">
                             <label><b>Team Members</b></label>
                         </div>
