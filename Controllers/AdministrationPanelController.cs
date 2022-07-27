@@ -167,6 +167,11 @@ namespace IAMS.Controllers
           return dBConnection.AddGroup(grp);
                
         }
+        [HttpPost]
+        public List<UserModel> find_users(UserModel user)
+        {
+            return dBConnection.GetAllUsers(user);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -26,7 +26,7 @@
                 },
                 cache: false,
                 success: function (data) {
-                    g_branches = data;
+                    g_userList = data;
                     $.each(data, function (index, branch) {
                         $('#brSearchField').append('<option value="' + branch.id + '" id="' + branch.id + '">' + branch.description + '</option>')
                     });
@@ -63,6 +63,26 @@
             });
             getSubEntities();
         }
+    }
+    function findButtonClickHandler() {
+        $('#userListTable tbody').empty();
+        $.ajax({
+            url: "/AdministrationPanel/find_users",
+            type: "POST",
+            data: {
+                'PPNumber': $('#ppnoSearchField').val()
+            },
+            cache: false,
+            success: function (data) {
+                
+                g_userList = data;
+                $.each(data, function (index, user) {
+                    $('#userListTable tbody').append('<tr><td>' + user.name + '</td><td>' + user.ppNumber + '</td><td>' + user.userPostingZone + '</td><td>' + user.userPostingBranch + '</td><td>' + user.userPostingDiv + '</td><td>' + user.userPostingDept + '</td><td>' + user.email + '</td><td>' + user.userGroupID + '</td><td>' + user.isActive +'</td></tr>')
+                });
+
+            },
+            dataType: "json",
+        });
     }
 
 </script>
@@ -190,69 +210,26 @@
     </div>
 </div>
 <div class="row col-md-12 mt-1">
-     <button class="btn btn-danger col-md-2" style="margin-left:auto;">Find</button>
+     <button onclick="findButtonClickHandler();" class="btn btn-danger col-md-2" style="margin-left:auto;">Find</button>
     
 </div>
 <div class="mt-1">
-    <table class="table table-bordered mb-0 mt-3 bg-white table-hover table-striped" id="Manage User">
+    <table class="table table-bordered mb-0 mt-3 bg-white table-hover table-striped" id="userListTable">
         <thead>
             <tr>
-                <td class="mh-50" style="text-align:left;" colspan="6"><h6>User Name</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>P.P. No.</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>Zone</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>Branch</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>Division</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>Department</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>Email</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>Group/Role</h6></td>
-                <td style="text-align:left;" colspan="6"><h6>Is Active</h6></td>
+                <td style="text-align:left;"><h6>User Name</h6></td>
+                <td style="text-align:left;"><h6>P.P. No.</h6></td>
+                <td style="text-align:left;"><h6>Zone</h6></td>
+                <td style="text-align:left;"><h6>Branch</h6></td>
+                <td style="text-align:left;"><h6>Division</h6></td>
+                <td style="text-align:left;"><h6>Department</h6></td>
+                <td style="text-align:left;"><h6>Email</h6></td>
+                <td style="text-align:left;"><h6>Group/Role</h6></td>
+                <td style="text-align:left;"><h6>Is Active</h6></td>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"><input type="checkbox" /></td>
-            </tr>
-            <tr>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"><input type="checkbox" /></td>
-            </tr>
-            <tr>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"><input type="checkbox" /></td>
-            </tr>
-            <tr>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"></td>
-                <td style="text-align:left;" colspan="6"><input type="checkbox" /></td>
-            </tr>
+          
         </tbody>
     </table>
 </div>

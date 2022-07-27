@@ -41,6 +41,7 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\net
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\System.Windows.Extensions.dll
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.csproj.AssemblyReference.cache
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.GeneratedMSBuildEditorConfig.editorconfig
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.AssemblyInfoInputs.cache
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.AssemblyInfo.cs

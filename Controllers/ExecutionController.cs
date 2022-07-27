@@ -120,7 +120,9 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
-             return View();
+            ViewData["DivisionList"] = dBConnection.GetDivisions(false);
+            ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -258,6 +258,42 @@ namespace IAMS
             con.Close();
             return gm;
         }
+
+        public List<UserModel> GetAllUsers(UserModel user)
+        {
+            List<UserModel> userList = new List<UserModel>();
+            var con = this.DatabaseConnection();
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = "select U.*,b.BRANCHID, z.ZONEID,dep.ID as DEPTID, d.DIVISIONID from V_SERVICE_USER U left join v_service_zones z on u.ZONEID=z.ZONEID left join v_service_branch b on u.BRANCHID=b.BRANCHID left join v_service_division d on u.DIVISIONID=d.DIVISIONID left join v_service_department dep on u.DEPARTMENTID=dep.ID WHERE U.PPNO='" + user.PPNumber+"' ORDER BY U.USERID";
+                OracleDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    UserModel um = new UserModel();
+                    um.ID = Convert.ToInt32(rdr["USERID"]);
+                    um.PPNumber = rdr["PPNO"].ToString();
+                    um.Name = rdr["LOGIN_NAME"].ToString();
+                    um.Email = rdr["LOGIN_NAME"].ToString();
+                    if(rdr["BRANCHID"].ToString()!= null && rdr["BRANCHID"].ToString() != "")
+                    um.UserPostingBranch = Convert.ToInt32(rdr["BRANCHID"]);
+                    if (rdr["DEPTID"].ToString() != null && rdr["DEPTID"].ToString() != "")
+                        um.UserPostingDept = Convert.ToInt32(rdr["DEPTID"]);
+                    if (rdr["ZONEID"].ToString() != null && rdr["ZONEID"].ToString() != "")
+                        um.UserPostingZone = Convert.ToInt32(rdr["ZONEID"]);
+                    if (rdr["DIVISIONID"].ToString() != null && rdr["DIVISIONID"].ToString() != "")
+                        um.UserPostingDiv = Convert.ToInt32(rdr["DIVISIONID"]);
+
+                    //  um.Name = rdr["LOGIN_NAME"].ToString();
+                    //  um.GROUP_DESCRIPTION = rdr["DESCRIPTION"].ToString();
+                    //  um.GROUP_CODE = Convert.ToInt32(rdr["GROUP_ID"]);
+                    //  um.ISACTIVE = rdr["STATUS"].ToString();
+                    userList.Add(um);
+                }
+            }
+            con.Close();
+            return userList;
+            
+        }
         public void AddGroupMenuAssignment(int role_id = 0, int menu_id = 0, string page_ids = "")
         {
             var con = this.DatabaseConnection();
@@ -356,9 +392,11 @@ namespace IAMS
             using (OracleCommand cmd = con.CreateCommand())
             {
                 if(zone_code==0)
-                cmd.CommandText = "Select b.*, s.DESCRIPTION as BRANCH_SIZE,  z.ZONENAME   FROM T_BRANCH b inner join T_BR_SIZE s on b.BRANCH_SIZE_ID=s.BR_SIZE_ID inner join t_zones z on b.zoneid=z.zoneid  order by b.BRANCHNAME asc";
+                    cmd.CommandText = "Select b.*, z.ZONENAME   FROM V_SERVICE_BRANCH b inner join V_SERVICE_ZONES z on b.zoneid=z.zoneid  order by b.BRANCHNAME asc";
+                //cmd.CommandText = "Select b.*, s.DESCRIPTION as BRANCH_SIZE,  z.ZONENAME   FROM V_SERVICE_BRANCH b inner join T_BR_SIZE s on b.BRANCH_SIZE_ID=s.BR_SIZE_ID inner join V_SERVICE_ZONES z on b.zoneid=z.zoneid  order by b.BRANCHNAME asc";
                 else
-                    cmd.CommandText = "Select b.*, s.DESCRIPTION as BRANCH_SIZE,  z.ZONENAME   FROM T_BRANCH b inner join T_BR_SIZE s on b.BRANCH_SIZE_ID=s.BR_SIZE_ID inner join t_zones z on b.zoneid=z.zoneid WHERE z.ZONECODE="+zone_code+" order by b.BRANCHNAME asc";
+                    cmd.CommandText = "Select b.*,  z.ZONENAME   FROM V_SERVICE_BRANCH b inner join V_SERVICE_ZONES z on b.zoneid=z.zoneid WHERE z.ZONECODE=" + zone_code + " order by b.BRANCHNAME asc";
+                //cmd.CommandText = "Select b.*, s.DESCRIPTION as BRANCH_SIZE,  z.ZONENAME   FROM V_SERVICE_BRANCH b inner join T_BR_SIZE s on b.BRANCH_SIZE_ID=s.BR_SIZE_ID inner join V_SERVICE_ZONES z on b.zoneid=z.zoneid WHERE z.ZONECODE="+zone_code+" order by b.BRANCHNAME asc";
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -368,9 +406,9 @@ namespace IAMS
                     br.BRANCHNAME = rdr["BRANCHNAME"].ToString();
                     br.ZONE_NAME = rdr["ZONENAME"].ToString();
                     br.BRANCHCODE = rdr["BRANCHCODE"].ToString();
-                    br.BRANCH_SIZE_ID = Convert.ToInt32(rdr["BRANCH_SIZE_ID"]);
+                    br.BRANCH_SIZE_ID = 1;//Convert.ToInt32(rdr["BRANCH_SIZE_ID"]);
                     br.DESCRIPTION = rdr["DESCRIPTION"].ToString();
-                    br.BRANCH_SIZE = rdr["BRANCH_SIZE"].ToString();
+                    br.BRANCH_SIZE = "";//rdr["BRANCH_SIZE"].ToString();
                     if (rdr["ISACTIVE"].ToString() == "Y")
                         br.ISACTIVE = "Active";
                     else if (rdr["ISACTIVE"].ToString() == "N")
@@ -386,26 +424,27 @@ namespace IAMS
         }
         public BranchModel AddBranch(BranchModel br)
         {
-            var con = this.DatabaseConnection();
+            return br;
+            /*var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "INSERT INTO T_BRANCH b (b.BRANCHID,b.BRANCHCODE, b.BRANCHNAME, b.ZONEID, b.ISACTIVE, b.BRANCH_SIZE_ID) VALUES ( '" + br.BRANCHCODE + "','" + br.BRANCHCODE + "','" + br.BRANCHNAME + "','" + br.ZONEID + "','" + br.ISACTIVE + "','" + br.BRANCH_SIZE_ID + "')";
+                cmd.CommandText = "INSERT INTO V_SERVICE_BRANCH b (b.BRANCHID,b.BRANCHCODE, b.BRANCHNAME, b.ZONEID, b.ISACTIVE, b.BRANCH_SIZE_ID) VALUES ( '" + br.BRANCHCODE + "','" + br.BRANCHCODE + "','" + br.BRANCHNAME + "','" + br.ZONEID + "','" + br.ISACTIVE + "','" + br.BRANCH_SIZE_ID + "')";
                 OracleDataReader rdr = cmd.ExecuteReader();
 
             }
             con.Close();
-            return br;
+            return br;*/
         }
         public BranchModel UpdateBranch(BranchModel br)
         {
-            var con = this.DatabaseConnection();
+           /* var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "UPDATE T_BRANCH b SET b.BRANCHCODE='" + br.BRANCHCODE + "', b.BRANCHNAME='" + br.BRANCHNAME + "', b.ZONEID='" + br.ZONEID + "', b.BRANCH_SIZE_ID='" + br.BRANCH_SIZE_ID + "', b.ISACTIVE='" + br.ISACTIVE + "' WHERE b.BRANCHID=" + br.BRANCHID;
+                cmd.CommandText = "UPDATE V_SERVICE_BRANCH b SET b.BRANCHCODE='" + br.BRANCHCODE + "', b.BRANCHNAME='" + br.BRANCHNAME + "', b.ZONEID='" + br.ZONEID + "', b.BRANCH_SIZE_ID='" + br.BRANCH_SIZE_ID + "', b.ISACTIVE='" + br.ISACTIVE + "' WHERE b.BRANCHID=" + br.BRANCHID;
                 OracleDataReader rdr = cmd.ExecuteReader();
 
             }
-            con.Close();
+            con.Close();*/
             return br;
         }
         public List<ZoneModel> GetZones()
@@ -414,7 +453,7 @@ namespace IAMS
             List<ZoneModel> zoneList = new List<ZoneModel>();
             using (OracleCommand cmd = con.CreateCommand())
             {
-                cmd.CommandText = "Select z.* FROM T_ZONES z order by z.ZONENAME asc";
+                cmd.CommandText = "Select z.* FROM V_SERVICE_ZONES z order by z.ZONENAME asc";
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -423,9 +462,9 @@ namespace IAMS
                     z.ZONECODE = rdr["ZONECODE"].ToString();
                     z.ZONENAME = rdr["ZONENAME"].ToString();
                     z.DESCRIPTION = rdr["DESCRIPTION"].ToString();
-                    if (rdr["ISACTIVE"].ToString() == "A")
+                    if (rdr["ISACTIVE"].ToString() == "Y")
                         z.ISACTIVE = "Active";
-                    else if (rdr["ISACTIVE"].ToString() == "I")
+                    else if (rdr["ISACTIVE"].ToString() == "N")
                         z.ISACTIVE = "InActive";
                     else
                         z.ISACTIVE = rdr["ISACTIVE"].ToString();
@@ -492,6 +531,7 @@ namespace IAMS
         }
         public DivisionModel AddDivision(DivisionModel div)
         {
+            /*
             var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
@@ -499,11 +539,12 @@ namespace IAMS
                 OracleDataReader rdr = cmd.ExecuteReader();
                
             }
-            con.Close();
+            con.Close();*/
             return div;
         }
         public DivisionModel UpdateDivision(DivisionModel div)
         {
+            /*
             var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
@@ -511,7 +552,7 @@ namespace IAMS
                 OracleDataReader rdr = cmd.ExecuteReader();
 
             }
-            con.Close();
+            con.Close();*/
             return div;
         }
         public List<DepartmentModel> GetDepartments(int div_code=0,bool sessionCheck=true)
@@ -624,6 +665,7 @@ namespace IAMS
         }
         public DepartmentModel AddDepartment(DepartmentModel dept)
         {
+            /*
             var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
@@ -631,11 +673,12 @@ namespace IAMS
                 OracleDataReader rdr = cmd.ExecuteReader();
 
             }
-            con.Close();
+            con.Close();*/
             return dept;
         }
         public DepartmentModel UpdateDepartment(DepartmentModel dept)
         {
+            /*
             var con = this.DatabaseConnection();
             using (OracleCommand cmd = con.CreateCommand())
             {
@@ -643,7 +686,7 @@ namespace IAMS
                 OracleDataReader rdr = cmd.ExecuteReader();
 
             }
-            con.Close();
+            con.Close();*/
             return dept;
         }
         public List<RiskGroupModel> GetRiskGroup()
@@ -774,28 +817,36 @@ namespace IAMS
         }
         public List<AuditTeamModel> GetAuditTeams(int dept_code = 0)
         {
+            var loggedInUser = sessionHandler.GetSessionUser();
             var con = this.DatabaseConnection();
             List<AuditTeamModel> teamList = new List<AuditTeamModel>();
+            string where_clause = "";
+            if (loggedInUser.UserLocationType == "H")
+                where_clause = "inner join V_SERVICE_DEPARTMENT d on t.PLACE_OF_POSTING=d.ID WHERE t.PLACE_OF_POSTING = "+loggedInUser.UserPostingDept;
+            else if (loggedInUser.UserLocationType == "B")
+                where_clause = "inner join V_SERVICE_BRANCH b on t.PLACE_OF_POSTING=b.BRANCHID WHERE t.PLACE_OF_POSTING = " + loggedInUser.UserPostingBranch;
+            else if (loggedInUser.UserLocationType == "Z")
+                where_clause = "left join V_SERVICE_ZONES z on t.PLACE_OF_POSTING=z.ZONEID left join V_SERVICE_AUDITZONE az on t.PLACE_OF_POSTING=az.ID WHERE (t.PLACE_OF_POSTING = " + loggedInUser.UserPostingZone+ " or t.PLACE_OF_POSTING = "+loggedInUser.UserPostingAuditZone+")";
             using (OracleCommand cmd = con.CreateCommand())
             {
                 if (dept_code == 0)
-                    cmd.CommandText = "select t.*,tm.*, e.*, t.ID as TEAMID from t_ap_teamconstitute t inner join t_ap_team_members tm on t.id=tm.plan_id inner join t_audit_emp e on tm.teammember_id=e.ppno order by t.ID asc, tm.is_teamlead desc";
+                    // cmd.CommandText = "select t.*,tm.*, e.*, t.ID as TEAMID from t_ap_teamconstitute t inner join t_ap_team_members tm on t.id=tm.plan_id inner join t_audit_emp e on tm.teammember_id=e.ppno order by t.ID asc, tm.is_teamlead desc";
+                    cmd.CommandText = "select t.*, tm.*, e.*, t.ID as TEAMID from t_au_team_members "+where_clause;
                 else
-                    cmd.CommandText = "select t.*,tm.*, e.*, t.ID as TEAMID from t_ap_teamconstitute t inner join t_ap_team_members tm on t.id=tm.plan_id inner join t_audit_emp e on tm.teammember_id=e.ppno WHERE t.AUDIT_DEPARTMENT=" + dept_code+ " order by t.ID asc, tm.is_teamlead desc";
+                    // cmd.CommandText = "select t.*,tm.*, e.*, t.ID as TEAMID from t_ap_teamconstitute t inner join t_ap_team_members tm on t.id=tm.plan_id inner join t_audit_emp e on tm.teammember_id=e.ppno WHERE t.AUDIT_DEPARTMENT=" + dept_code+ " order by t.ID asc, tm.is_teamlead desc";
+                    cmd.CommandText = "select t.*, tm.*, e.*, t.ID as TEAMID from t_au_team_members "+where_clause+" and t.PLACE_OF_POSTING="+dept_code;
 
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
                     AuditTeamModel team = new AuditTeamModel();
-                    team.ID = Convert.ToInt32(rdr["TEAMID"]);
-                    team.CODE = Convert.ToInt32(rdr["CODE"]);
-                    team.NAME = rdr["NAME"].ToString();
+                    team.ID = Convert.ToInt32(rdr["T_ID"]);
+                    team.CODE = Convert.ToInt32(rdr["T_CODE"]);
+                    team.NAME = rdr["TEAM_NAME"].ToString();
                     team.AUDIT_DEPARTMENT = Convert.ToInt32(rdr["AUDIT_DEPARTMENT"]);
-                    team.TEAMMEMBER_ID = Convert.ToInt32(rdr["TEAMMEMBER_ID"]);
-
-                    team.IS_TEAMLEAD = rdr["IS_TEAMLEAD"].ToString();
-                    team.EMPLOYEENAME = rdr["EMPLOYEEFIRSTNAME"].ToString() + " "+ rdr["EMPLOYEELASTNAME"].ToString();
-
+                    team.TEAMMEMBER_ID = Convert.ToInt32(rdr["MEMBER_PPNO"]);
+                    team.IS_TEAMLEAD = rdr["ISTEAMLEAD"].ToString();
+                    team.EMPLOYEENAME = rdr["MEMBER_NAME"].ToString();
                     teamList.Add(team);
                 }
             }
@@ -857,9 +908,9 @@ namespace IAMS
             using (OracleCommand cmd = con.CreateCommand())
             {
                 if (period_id == 0)
-                    cmd.CommandText = "select p.*,d.Name as DIVISION_NAME,dp.Name as DEPARTMENT_NAME, b.branchname as BRANCH_NAME, az.name as AUDITZONE_NAME from T_AU_PLAN p left join t_divisions d on p.division_id = d.code left join t_departments dp on p.department_id = dp.code left join t_branch b on p.branchid = b.branchcode left join t_audit_zones az on p.audit_zoneid = az.code order by p.PLAN_ID asc";
+                    cmd.CommandText = "select p.*,d.Name as DIVISION_NAME,dp.Name as DEPARTMENT_NAME, b.branchname as BRANCH_NAME, az.name as AUDITZONE_NAME from T_AU_PLAN p left join t_divisions d on p.division_id = d.code left join t_departments dp on p.department_id = dp.code left join V_SERVICE_BRANCH b on p.branchid = b.branchcode left join t_audiV_SERVICE_ZONES az on p.audit_zoneid = az.code order by p.PLAN_ID asc";
                 else
-                    cmd.CommandText = "select p.*,d.Name as DIVISION_NAME,dp.Name as DEPARTMENT_NAME, b.branchname as BRANCH_NAME, az.name as AUDITZONE_NAME from T_AU_PLAN p left join t_divisions d on p.division_id = d.code left join t_departments dp on p.department_id = dp.code left join t_branch b on p.branchid = b.branchcode left join t_audit_zones az on p.audit_zoneid = az.code where p.auditperiod_id=" + period_id+ " order by p.PLAN_ID asc";
+                    cmd.CommandText = "select p.*,d.Name as DIVISION_NAME,dp.Name as DEPARTMENT_NAME, b.branchname as BRANCH_NAME, az.name as AUDITZONE_NAME from T_AU_PLAN p left join t_divisions d on p.division_id = d.code left join t_departments dp on p.department_id = dp.code left join V_SERVICE_BRANCH b on p.branchid = b.branchcode left join t_audiV_SERVICE_ZONES az on p.audit_zoneid = az.code where p.auditperiod_id=" + period_id+ " order by p.PLAN_ID asc";
 
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
@@ -1027,7 +1078,6 @@ namespace IAMS
             con.Close();
             return riskTransList;
         }
-
         public RiskProcessTransactions GetRiskProcessTransactionLastStatus(RiskProcessTransactions tr)
         {
             var con = this.DatabaseConnection();

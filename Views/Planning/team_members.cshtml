@@ -14,13 +14,10 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#sidebar_policy').hide();
-        $('#listofEmployeesContainer').hide();
-        
+        ShowEmployeeContainer();
         $("#searchTeamFormation").on("keyup", function () {
             var value = $(this).val().toLowerCase();
             $("#listOfEmployeeTeam tbody tr").filter(function () {
-
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
         });
@@ -30,10 +27,9 @@
     function ShowEmployeeContainer() {
         console.log($('#deptSelectionBox option:selected').val());
         if ($('#deptSelectionBox option:selected').val() == 0)
-            $('#listofEmployeesContainer').hide();
+            $('#listOfEmployeeTeam tbody').empty();
         else {
-            $('#listofEmployeesContainer').show();
-          
+            $('#listOfEmployeeTeam tbody').empty();
             $.ajax({
                 url: "/Planning/audit_team",
                 type: "POST",
@@ -42,7 +38,6 @@
                 },
                 cache: false,
                 success: function (data) {
-                    $('#listOfEmployeeTeam tbody').empty();
                     console.log(data);
                     var teamId = 0;
                     var srNo = 1;
@@ -52,7 +47,7 @@
                         if (team.iS_TEAMLEAD == "Y")
                             teamLeadStr = '(L)'
                         if (team.id != teamId) {
-                            $('#listOfEmployeeTeam tbody').append('<tr id=teamcode_' + team.id + '><td class="searchable"><p class="fw-normal mb-1">' + srNo + '</p></td><td class="searchable"><p class="fw-normal mb-1">' + team.name + ' </p></td><td class="searchable"><p class="empName fw-normal mb-1">' + team.employeename + ' ' + teamLeadStr + ' </p></td><td><small class="text-danger deleteTeam">Delete</small></td></tr>')
+                            $('#listOfEmployeeTeam tbody').append('<tr id=teamcode_' + team.id + '><td class="searchable"><p class="fw-normal mb-1">' + srNo + '</p></td><td class="searchable"><p class="fw-normal mb-1">' + team.name + ' </p></td><td class="searchable"><p class="empName fw-normal mb-1">' + team.employeename + ' ' + teamLeadStr + ' </p></td><td><small class="text-danger deleteTeam">Edit</small></td><td><small class="text-danger deleteTeam">Delete</small></td></tr>')
                             teamId = team.id;
                             srNo++;
                         } else {
@@ -75,29 +70,28 @@
         $('#setupAuditTeam').modal('show');
     }
 </script>
-<div class="row mt-3">
+<div class="row d-none">
     <h5>Select Department</h5>
     <select id="deptSelectionBox" onchange="ShowEmployeeContainer();" class="form-select form-control" aria-label="Default select example">
-        <option value="0" selected>Select Your Department</option>
         @{
             if (ViewData["AuditDepartments"] != null)
             {
                 foreach (var item in (dynamic)(ViewData["AuditDepartments"]))
                 {
-                    <option value="@item.CODE" id="@item.CODE">@item.NAME</option>
+                    <option selected ="selected" value="@item.CODE" id="@item.CODE">@item.NAME</option>
                 }
             }
         }
 
     </select>
 </div>
-<div id="listofEmployeesContainer" class="row mt-3 hide">
+<div id="listofEmployeesContainer" class="row mt-3">
     <div class="row mt-2 w-100">
         <div class="col-md-6">
             <h5>Team Formation</h5>
         </div>
-        <div class="col-md-6">
-            <button onclick="addNewTeam();" class="btn-danger" style="float:right;">Add New</button>
+        <div class="col-md-6" style="padding-right:0px;">
+            <button onclick="addNewTeam();" class="btn btn-danger" style="float:right;">Constitue New Team</button>
         </div>
     </div>
     <table id="listOfEmployeeTeam" class="table align-middle mb-0 mt-2 bg-white table-hover table-striped">
@@ -106,11 +100,18 @@
                 <th class="col-md-1">Sr No.</th>
                 <th class="col-md-3">Team Name</th>
                 <th class="col-md-7">Team Members</th>
-                <th class="col-md-1"></th>
+                <th class="col-md-1">Edit</th>
+                <th class="col-md-1">Delete</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td class="searchable"><p class="fw-normal mb-1">1</p></td><td class="searchable"><p class="fw-normal mb-1">Team A</p></td><td class="searchable"><p class="fw-normal mb-1">Ali Asif (L), Muhammad Aqib (M)</p></td><td><small class="text-danger deleteTeam">Delete</small></td></tr>
+            <tr>
+            <td class="searchable"><p class="fw-normal mb-1">1</p></td>
+            <td class="searchable"><p class="fw-normal mb-1">Team A</p></td>
+            <td class="searchable"><p class="fw-normal mb-1">Ali Asif (L), Muhammad Aqib (M)</p></td>
+            <td><small class="text-danger">Edit</small></td>
+            <td><small class="text-danger deleteTeam">Delete</small></td>
+            </tr>
 
         </tbody>
     </table>
