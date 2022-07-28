@@ -70,9 +70,15 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engageme
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\audit_criteria_old.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\ccqs.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\change_request.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\engagement_plan.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\Join.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\notifications.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\plan_approvals.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\post_changes_approved_plan.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\post_changes_team_members.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\preparation_ccqs.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\submission_for_approval.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\submission_for_review.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Engagement\task_list.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Execution\AnnexureB.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Execution\AnnexureB_2.cshtml.g.cs
@@ -128,8 +134,12 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\RiskAsse
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\RiskAssessment\risk_model.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\audit_zones.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\branches.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\control_violation.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\departments.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\divisions.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\inspection_unit.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\Manage_audit_zone_branches.cshtml.g.cs
+E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\manage_inspection_unit_branches.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\processes.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\process_authorize.cshtml.g.cs
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\process_review.cshtml.g.cs
@@ -148,7 +158,3 @@ E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.dll
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.pdb
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.genruntimeconfig.cache
 E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\IAMS.csproj.AssemblyReference.cache
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\inspection_unit.cshtml.g.cs
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\Manage_audit_zone_branches.cshtml.g.cs
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\manage_inspection_unit_branches.cshtml.g.cs
-E:\ISAD Official\IAMS New\IAMS\IAMS\obj\Debug\netcoreapp3.1\Razor\Views\Setup\control_violation.cshtml.g.cs

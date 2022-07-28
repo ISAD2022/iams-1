@@ -33,7 +33,22 @@ namespace IAMS.Controllers
             ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
             return View();
         }
+        public IActionResult engagement_plan()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            ViewData["AuditDepartments"] = dBConnection.GetDepartments(354);
+            ViewData["DivisionsList"] = dBConnection.GetDivisions(false);
+            ViewData["AuditZonesList"] = dBConnection.GetZones();
+            return View();
+        }
         public IActionResult audit_criteria()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            return View();
+        }
+        public IActionResult submission_for_review()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
@@ -58,7 +73,30 @@ namespace IAMS.Controllers
             ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
             return View();
         }
-
+        public IActionResult plan_approvals()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            return View();
+        }
+        public IActionResult submission_for_approval()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            return View();
+        }
+        public IActionResult post_changes_approved_plan()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            return View();
+        }
+        public IActionResult post_changes_team_members()
+        {
+            ViewData["TopMenu"] = tm.GetTopMenus();
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            return View();
+        }
         public IActionResult notifications()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();

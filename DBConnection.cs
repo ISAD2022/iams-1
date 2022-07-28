@@ -31,7 +31,6 @@ namespace IAMS
                 ocsb.Password = "ztblais";
                 ocsb.UserID = "ztblais";
                 ocsb.DataSource = "10.1.100.222:1521/devdb18c.ztbl.com.pk";
-
                 // connect
                 con.ConnectionString = ocsb.ConnectionString;
                 con.Open();
@@ -766,9 +765,9 @@ namespace IAMS
             using (OracleCommand cmd = con.CreateCommand())
             {
                 if (activity_id == 0)
-                    cmd.CommandText = "Select ob.* FROM T_AD_OBS_TEMPLATE ob inner join T_R_ACTIVITY ra on ob.ACTIVITY_ID = ra.ACTIVITY_ID order by ob.TEMP_ID asc";
+                    cmd.CommandText = "Select ob.* FROM T_A_OBS_TEMPLATE ob inner join T_R_ACTIVITY ra on ob.ACTIVITY_ID = ra.ACTIVITY_ID order by ob.TEMP_ID asc";
                 else
-                    cmd.CommandText = "Select ob.* FROM T_AD_OBS_TEMPLATE ob inner join T_R_ACTIVITY ra on ob.ACTIVITY_ID = ra.ACTIVITY_ID WHERE ra.ACTIVITY_ID = " + activity_id + " order by ob.TEMP_ID asc";
+                    cmd.CommandText = "Select ob.* FROM T_AP_OBS_TEMPLATE ob inner join T_R_ACTIVITY ra on ob.ACTIVITY_ID = ra.ACTIVITY_ID WHERE ra.ACTIVITY_ID = " + activity_id + " order by ob.TEMP_ID asc";
 
                 OracleDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())

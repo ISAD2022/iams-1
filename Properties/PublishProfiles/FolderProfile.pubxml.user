@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>E:\ISAD Official\IAMS New\IAMS Published</_PublishTargetUrl>
+    <History>True|2022-07-28T08:25:34.6134866Z;True|2022-07-28T12:22:46.1064292+05:00;False|2022-07-28T12:21:29.5740725+05:00;True|2022-07-28T12:09:18.7990921+05:00;True|2022-07-28T10:59:34.3299817+05:00;</History>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+</Project>
