@@ -16,8 +16,8 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
-       
-        $('#sidebar_policy').hide();        
+
+        $('#sidebar_policy').hide();
     });
 
     function div_risksubcategoryShowHide() {
@@ -39,9 +39,9 @@
                 success: function (data) {
                     $('#riskSubGroupSelectBox').append("<option value=\"0\" id=\"0\">--Select Sub Group--</option>");
                     $.each(data, function (index, item) {
-                        $('#riskSubGroupSelectBox').append("<option value=\"" + item.s_GR_ID + "\"> " + item.description+"</option>");
+                        $('#riskSubGroupSelectBox').append("<option value=\"" + item.s_GR_ID + "\"> " + item.description + "</option>");
                     });
-                    
+
                 },
                 dataType: "json",
             });
@@ -87,19 +87,19 @@
                     $.each(data, function (index, item) {
                         $('#template_box').val(item.obS_TEMPLATE).trigger('change');
                     });
-                   
+
                 },
                 dataType: "json",
             });
         }
     }
-    
+
 </script>
 <div class="row col-md-12">
     <div class="col-md-12 mt-3">
         <center class="w-100"><h3>Observation</h3></center>
         <div>
-            <h5>Select Risk Group</h5>
+            <h5>Process</h5>
         </div>
         <select id="riskGroupSelectBox" onchange="div_risksubcategoryShowHide();" class="form-select form-control" aria-label="Default select example">
             <option value="0" id="0" selected="selected">--Select Risk Group--</option>
@@ -115,12 +115,12 @@
         </select>
     </div>
     <div id="div_risksubcategory" style="display:none;" class="col-md-12 mt-3">
-        <h5>Select Risk Sub Group</h5>
+        <h5>Activity</h5>
         <select id="riskSubGroupSelectBox" onchange="div_activityContainerShowHide();" class="form-select form-control" aria-label="Default select example">
         </select>
     </div>
     <div id="div_activityContainer" style="display:none;" class="col-md-12 mt-3">
-        <h5>Select Activity/Observation</h5>
+        <h5>Observation</h5>
         <select id="riskActivitiesSelectBox" onchange="getAuditObservationTemplate();" class="form-select form-control" aria-label="Default select example">
         </select>
     </div>
@@ -130,43 +130,43 @@
         </div>
     </div>
     <div class="row col-md-12 mt-3">
-        <div class="col-md-6">
-            <label>No. of Days to Reply</label>
-            <select class="form-control form-select">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-            </select>
+
+        <div class="row col-md-12 mt-3">
+            <div class="col-md-3 mt-3">
+                <label><h4>Responsible P.P. No.</h4></label>
+            </div>
+            <div class="col-md-4 mt-3">
+                <input type="number" />
+            </div>
         </div>
-        <div class="col-md-6">
-            <label>Attachments</label>
-            <input class="form-control" type="file" multiple="multiple" style="padding-top:3px;" />
+        <div class="row col-md-12 mt-3">
+            <div class="col-md-3">
+                <label><h5>No. of Days to Reply</h5></label>
+            </div>
+            <div class="col-md-3">
+                <select class="form-control form-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label><h5>Attachments</h5></label>
+            </div>
+            <div class="col-md-4">
+                <input class="form-control" type="file" multiple="multiple" style="padding-top:3px;" />
+            </div>
         </div>
+        
+            
+        <div class="row col-md-12 mt-5">
+            <button class="btn btn-primary">Save</button>
+            <span><></span> <button class="btn btn-primary">Submit to Auditee  </button>
 
-
+        </div>
+    
     </div>
-    <div class="row col-md-12 mt-3">
-        <center><h5>Uploaded Files List</h5></center>
-        <table class="
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               
-               "></table>
-    </div>
-
-</div>

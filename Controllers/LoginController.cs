@@ -16,7 +16,6 @@ namespace IAMS.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private readonly DBConnection dBConnection = new DBConnection();
-        private readonly SessionHandler sessionHandler = new SessionHandler();
 
         public LoginController(ILogger<LoginController> logger)
         {
@@ -27,12 +26,18 @@ namespace IAMS.Controllers
         {
             return View();
         }
+      
+        public IActionResult IsAuthorized(bool check)
+        {
+            if (!check)
+                return RedirectToAction("Index");
+            else
+                return null;
+        }
         [HttpPost]
         public ActionResult DoLogin(LoginModel login)
         {
-            string ppno = login.PPNumber;
-            string password = login.Password;
-            var user=dBConnection.AutheticateLogin(login);
+          var user=dBConnection.AutheticateLogin(login);
             if (user.ID != 0)
             {
                 return RedirectToAction("Index", "Home");

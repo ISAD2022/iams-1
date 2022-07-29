@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 using IAMS.Models;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
-
+using Microsoft.AspNetCore.Mvc;
+using IAMS.Controllers;
 
 namespace IAMS
 {
@@ -19,28 +20,39 @@ namespace IAMS
     public class TopMenus
     {
         private readonly DBConnection dBConnection = new DBConnection();
+        private readonly SessionHandler sessionHandler = new SessionHandler();
         public List<Object> GetTopMenus()
         {
-            
-            var menus =dBConnection.GetTopMenus();
             List<object> menuList = new List<object>();
-            foreach (var item in menus)
+            var loggedUser=sessionHandler.GetSessionUser();
+            if (loggedUser.ID != 0)
             {
-                menuList.Add(item);
+                var menus = dBConnection.GetTopMenus();
+
+                foreach (var item in menus)
+                {
+                    menuList.Add(item);
+                }
             }
             return menuList;
         }
 
         public List<Object> GetTopMenusPages()
         {
-            var menus = dBConnection.GetTopMenuPages();
             List<object> menuList = new List<object>();
-            foreach (var item in menus)
+            var loggedUser = sessionHandler.GetSessionUser();
+            if (loggedUser.ID != 0)
             {
-                menuList.Add(item);
+                var menus = dBConnection.GetTopMenuPages();
+
+                foreach (var item in menus)
+                {
+                    menuList.Add(item);
+                }
             }
             return menuList;
         }
 
+       
     }
 }

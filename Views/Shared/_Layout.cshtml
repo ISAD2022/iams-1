@@ -37,6 +37,7 @@
 
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     @{
+
                         @if (ViewData["TopMenu"] != null)
                         {
                             foreach (var item in (dynamic)(ViewData["TopMenu"]))
@@ -153,7 +154,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navImg">
                             <a class="dropdown-item" href="#">Change Password</a>
-                            <a class="dropdown-item" href="~/Login/Index">Logout</a>
+                            <a class="dropdown-item" href="~/Login/Logout">Logout</a>
                         </div>
                     </li>
 

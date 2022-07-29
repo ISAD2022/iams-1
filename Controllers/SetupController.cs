@@ -14,6 +14,7 @@ namespace IAMS.Controllers
         private readonly ILogger<SetupController> _logger;
         private readonly TopMenus tm = new TopMenus();
         private readonly DBConnection dBConnection = new DBConnection();
+        private readonly SessionHandler sessionHandler = new SessionHandler();
 
         public SetupController(ILogger<SetupController> logger)
         {
@@ -28,6 +29,10 @@ namespace IAMS.Controllers
             ViewData["BranchList"] = dBConnection.GetBranches();
             ViewData["ZoneList"] = dBConnection.GetZones();
             ViewData["BranchSizeList"] = dBConnection.GetBranchSizes();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult manage_audit_zone_branches()
@@ -38,6 +43,10 @@ namespace IAMS.Controllers
             ViewData["BranchList"] = dBConnection.GetBranches();
             ViewData["ZoneList"] = dBConnection.GetZones();
             ViewData["BranchSizeList"] = dBConnection.GetBranchSizes();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult manage_inspection_unit_branches()
@@ -48,6 +57,10 @@ namespace IAMS.Controllers
             ViewData["BranchList"] = dBConnection.GetBranches();
             ViewData["ZoneList"] = dBConnection.GetZones();
             ViewData["BranchSizeList"] = dBConnection.GetBranchSizes();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         [HttpPost]
@@ -71,6 +84,10 @@ namespace IAMS.Controllers
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["DivisionList"] = dBConnection.GetDivisions();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         [HttpPost]
@@ -94,6 +111,10 @@ namespace IAMS.Controllers
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["DivisionList"] = dBConnection.GetDivisions();
             ViewData["DepartmentList"] = dBConnection.GetDepartments(0);
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         [HttpPost]
@@ -115,6 +136,10 @@ namespace IAMS.Controllers
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["AuditZoneList"] = dBConnection.GetAuditZones();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
@@ -123,6 +148,10 @@ namespace IAMS.Controllers
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["AuditZoneList"] = dBConnection.GetAuditZones();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult control_violation()
@@ -130,6 +159,10 @@ namespace IAMS.Controllers
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["AuditZoneList"] = dBConnection.GetAuditZones();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
@@ -139,6 +172,10 @@ namespace IAMS.Controllers
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["DivisionList"] = dBConnection.GetDivisions(false);
             ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult process_review()
@@ -154,6 +191,10 @@ namespace IAMS.Controllers
                 item.PROCESS_COMMENTS = pt.PROCESS_COMMENTS;
             }
             ViewData["TransactionsList"] = trList;
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult process_authorize()
@@ -169,6 +210,10 @@ namespace IAMS.Controllers
                 item.PROCESS_COMMENTS = pt.PROCESS_COMMENTS;
             }
             ViewData["TransactionsList"] = trList;
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult sub_entities()
@@ -178,6 +223,10 @@ namespace IAMS.Controllers
             ViewData["SubEntitiesList"] = dBConnection.GetSubEntities();
             ViewData["DivisionList"] = dBConnection.GetDivisions(false);
             ViewData["DepartmentList"] = dBConnection.GetDepartments(0,false);
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         [HttpPost]

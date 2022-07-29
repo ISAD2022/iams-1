@@ -15,6 +15,7 @@ namespace IAMS.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TopMenus tm = new TopMenus();
+        private readonly SessionHandler sessionHandler = new SessionHandler(); 
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -25,6 +26,10 @@ namespace IAMS.Controllers
         {
            ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if(!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index","Login");
+            if(!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
@@ -32,6 +37,10 @@ namespace IAMS.Controllers
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 

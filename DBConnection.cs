@@ -24,16 +24,21 @@ namespace IAMS
         {
             try
             {
-                // create connection
+                var loggedInUser = sessionHandler.GetSessionUser();
                 OracleConnection con = new OracleConnection();
-                // create connection string using builder
-                OracleConnectionStringBuilder ocsb = new OracleConnectionStringBuilder();
-                ocsb.Password = "ztblais";
-                ocsb.UserID = "ztblais";
-                ocsb.DataSource = "10.1.100.222:1521/devdb18c.ztbl.com.pk";
-                // connect
-                con.ConnectionString = ocsb.ConnectionString;
-                con.Open();
+                if (loggedInUser.ID != 0)
+                {
+                    // create connection
+                    
+                    // create connection string using builder
+                    OracleConnectionStringBuilder ocsb = new OracleConnectionStringBuilder();
+                    ocsb.Password = "ztblais";
+                    ocsb.UserID = "ztblais";
+                    ocsb.DataSource = "10.1.100.222:1521/devdb18c.ztbl.com.pk";
+                    // connect
+                    con.ConnectionString = ocsb.ConnectionString;
+                    con.Open();
+                }
                 return con;
 
             }
@@ -104,26 +109,28 @@ namespace IAMS
         }
         public List<MenuModel> GetTopMenus()
         {
-            var con = this.DatabaseConnection();
-            var loggedInUser = sessionHandler.GetSessionUser();
-            List<MenuModel> modelList = new List<MenuModel>();
-            using (OracleCommand cmd = con.CreateCommand())
-            {
-                cmd.CommandText = "select m.* from t_menu m, t_user_group_map r where m.menu_id = r.menu_id and r.role_id="+loggedInUser.UserRoleID+" ORDER BY M.MENU_ORDER ASC" +
-                    "";
-                OracleDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+           
+                var con = this.DatabaseConnection();
+                var loggedInUser = sessionHandler.GetSessionUser();
+                List<MenuModel> modelList = new List<MenuModel>();
+                using (OracleCommand cmd = con.CreateCommand())
                 {
-                    MenuModel menu = new MenuModel();
-                    menu.Menu_Id = Convert.ToInt32(rdr["MENU_ID"]);
-                    menu.Menu_Name = rdr["MENU_NAME"].ToString();
-                    menu.Menu_Order = rdr["MENU_ORDER"].ToString();
-                    menu.Menu_Description = rdr["MENU_DESCRIPTION"].ToString();
-                    modelList.Add(menu);
+                    cmd.CommandText = "select m.* from t_menu m, t_user_group_map r where m.menu_id = r.menu_id and r.role_id=" + loggedInUser.UserRoleID + " ORDER BY M.MENU_ORDER ASC";
+                    OracleDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        MenuModel menu = new MenuModel();
+                        menu.Menu_Id = Convert.ToInt32(rdr["MENU_ID"]);
+                        menu.Menu_Name = rdr["MENU_NAME"].ToString();
+                        menu.Menu_Order = rdr["MENU_ORDER"].ToString();
+                        menu.Menu_Description = rdr["MENU_DESCRIPTION"].ToString();
+                        modelList.Add(menu);
+                    }
                 }
-            }
-            con.Close();
-            return modelList;
+                con.Close();
+                return modelList;
+           
+            
         }
         public List<MenuPagesModel> GetTopMenuPages()
         {
@@ -252,7 +259,7 @@ namespace IAMS
                     cmd.CommandText = "INSERT INTO t_groups g (g.ROLE_ID, g.GROUP_ID, g.DESCRIPTION, g.GROUP_NAME, g.STATUS) VALUES ( (select COALESCE(max(pr.ROLE_ID)+1,1) from t_groups pr),(select COALESCE(max(pg.GROUP_ID)+1,1) from t_groups pg), '" + gm.GROUP_DESCRIPTION+ "', '" + gm.GROUP_NAME + "', '" + gm.ISACTIVE + "')";
                 else
                     cmd.CommandText = "UPDATE T_GROUPS g SET g.GROUP_NAME = '" + gm.GROUP_NAME+"', g.DESCRIPTION='"+gm.GROUP_DESCRIPTION+"', g.STATUS='"+gm.ISACTIVE+"' WHERE g.GROUP_ID="+gm.GROUP_ID;
-                OracleDataReader rdr = cmd.ExecuteReader();
+                cmd.ExecuteReader();
             }
             con.Close();
             return gm;

@@ -14,6 +14,7 @@ namespace IAMS.Controllers
         private readonly ILogger<ExecutionController> _logger;
         private readonly TopMenus tm = new TopMenus();
         private readonly DBConnection dBConnection = new DBConnection();
+        private readonly SessionHandler sessionHandler = new SessionHandler();
 
         public ExecutionController(ILogger<ExecutionController> logger)
         {
@@ -23,58 +24,94 @@ namespace IAMS.Controllers
         public IActionResult Index()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
         public IActionResult AnnexureB()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult AnnexureB_2()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult AnnexureB_3()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
         public IActionResult AnnexureB_4()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult AnnexureB_5()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult AnnexureB_6()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
         public IActionResult AnnexureB_7()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult AnnexureB_8()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult engagement_plan()
@@ -84,6 +121,10 @@ namespace IAMS.Controllers
             ViewData["AuditDepartments"] = dBConnection.GetDepartments(354);
             ViewData["DivisionsList"] = dBConnection.GetDivisions(false);
             ViewData["AuditZonesList"] = dBConnection.GetZones();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
@@ -92,6 +133,10 @@ namespace IAMS.Controllers
             ViewData["TopMenu"] = tm.GetTopMenus();
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["RISK_GROUPS"] = dBConnection.GetRiskGroup();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         [HttpPost]
@@ -113,7 +158,11 @@ namespace IAMS.Controllers
         public IActionResult Task_list()
         {
             ViewData["TopMenu"] = tm.GetTopMenus();
-            ViewData["TopMenuPages"] = tm.GetTopMenusPages(); 
+            ViewData["TopMenuPages"] = tm.GetTopMenusPages();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
         public IActionResult audit_execution()
@@ -122,6 +171,10 @@ namespace IAMS.Controllers
             ViewData["TopMenuPages"] = tm.GetTopMenusPages();
             ViewData["DivisionList"] = dBConnection.GetDivisions(false);
             ViewData["ProcessList"] = dBConnection.GetRiskProcessDefinition();
+            if (!sessionHandler.IsUserLoggedIn())
+                return RedirectToAction("Index", "Login");
+            if (!sessionHandler.HasPermissionToViewPage("Home"))
+                return RedirectToAction("Index", "PageNotFound");
             return View();
         }
 
